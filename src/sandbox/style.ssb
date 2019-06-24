@@ -1,0 +1,128 @@
+var fontFamily = "Segoe UI";
+var color = {
+	red: {
+		background: "#D32F2F",
+		text: "#F44336"
+	}
+};
+body {
+	margin: 0;
+	font-family: ${fontFamily};
+	overflow-y: hidden;
+}
+.top {
+	.filename {
+		span, input, select {
+			font-family: ${fontFamily};
+			height: 26px;
+			margin: 4px 0 4px 4px;
+			padding: 0 8px;
+		}
+	}
+	.input {
+		height: calc(100% - 34px);
+		.editor .mode {
+			position: absolute;
+			z-index: 999;
+			top: 8px;
+			right: 22px;
+			padding: 2px 4px;
+			font-size, line-height: 12px;
+			background: rgba(187, 187, 187, .3);
+			color: #333;
+			border-radius: 1000px;
+			border: none;
+			opacity: .5;
+			transition: opacity .1s linear;
+			&:hover {
+				opacity: 1;
+			}
+			&:focus {
+				outline: none;
+			}
+		}
+	}
+}
+.bottom {
+	nav {
+		.item {
+			position: relative;
+			cursor: pointer;
+			padding: 8px;
+			&:hover::after, &.active::after {
+				content: '';
+				position: absolute;
+				bottom: -2px;
+				left, right: 0;
+				height: 4px;
+			}
+			&:not(.active):hover::after {
+				opacity: .5;
+				background: darkviolet;
+			}
+			&.active::after {
+				background: darkviolet;
+			}
+			.has-errors &.error, .has-warnings &.warn {
+				&::before {
+					content: '• ';
+					color: ${color.red.text};
+					font-weight: bold;
+				}
+			}
+		}
+	}
+	section {
+		height: calc(100% - 40px);
+	}
+}
+.fullscreen {
+	position: fixed;
+	top, bottom, left, right: 0;
+}
+.editor {
+	display: inline-block;
+	position: relative;
+	width: calc(100% / ${*showCount});
+	height: 100%;
+}
+.x {
+	.top, .bottom {
+		display: inline-block;
+		width: 50%;
+		height: 100vh;
+	}
+}
+.y {
+	.top, .bottom {
+		height: 50vh;
+	}
+}
+.text {
+	padding: 8px;
+	width, height: 100%;
+	border: none;
+	font-family: monospace;
+	resize: none;
+	&:focus {
+		outline: none;
+	}
+}
+.color-red {
+	color: ${color.red.text};
+}
+
+.CodeMirror {
+	height: 100%;
+	border-top, border-bottom: 1px solid silver;
+	.error::before, .warn::before {
+		position: absolute;
+		font-size: .8em;
+	}
+	.error::before {
+		content: '🛑';
+	}
+	.warn::before {
+		content: '⚠️';
+	}
+}

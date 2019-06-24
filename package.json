@@ -1,0 +1,18 @@
+{
+	"name": "sactory.github.io",
+	"main": "index.js",
+	"scripts": {
+		"build": "node ./index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/sactory/sactory.github.io.git"
+	},
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/sactory/sactory.github.io/issues"
+	},
+	"devDependencies": {
+		"sactory": "^0.102.0"
+	}
+}
