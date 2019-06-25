@@ -134,127 +134,122 @@ var color = {
 		text: "#F44336"
 	}
 };
-var ել=բ.select(եի, "body"); 
-	ել.value("margin", "0");
-	ել.value("font-family", (fontFamily));
-	ել.value("overflow-y", "hidden");
-
-var եծ=բ.select(եի, ".top"); 
-	var եկ=բ.select(եծ, ".filename"); 
-		var եհ=բ.select(եկ, "span, input, select"); 
-			եհ.value("font-family", (fontFamily));
-			եհ.value("height", "26px");
-			եհ.value("margin", "4px 0 4px 4px");
-			եհ.value("padding", "0 8px");
+var ել=բ.select(եի, ".top"); 
+	var եխ=բ.select(ել, ".filename"); 
+		var եծ=բ.select(եխ, "span, input, select"); 
+			եծ.value("font-family", (fontFamily));
+			եծ.value("height", "26px");
+			եծ.value("margin", "4px 0 4px 4px");
+			եծ.value("padding", "0 8px");
 		
 	
-	var եղ=բ.select(եծ, ".input"); 
-		եղ.value("height", "calc(100% - 34px)");
-		var եճ=բ.select(եղ, ".editor .mode"); 
-			եճ.value("position", "absolute");
-			եճ.value("z-index", "999");
-			եճ.value("top", "8px");
-			եճ.value("right", "22px");
-			եճ.value("padding", "2px 4px");
-			եճ.value("font-size, line-height", "12px");
-			եճ.value("background", "rgba(187, 187, 187, .3)");
-			եճ.value("color", "#333");
-			եճ.value("border-radius", "1000px");
-			եճ.value("border", "none");
-			եճ.value("opacity", ".5");
-			եճ.value("transition", "opacity .1s linear");
-			var եմ=բ.select(եճ, "&:hover"); 
-				եմ.value("opacity", "1");
+	var եհ=բ.select(ել, ".input"); 
+		եհ.value("height", "calc(100% - 34px)");
+		var եձ=բ.select(եհ, ".editor .mode"); 
+			եձ.value("position", "absolute");
+			եձ.value("z-index", "999");
+			եձ.value("top", "8px");
+			եձ.value("right", "22px");
+			եձ.value("padding", "2px 4px");
+			եձ.value("font-size, line-height", "12px");
+			եձ.value("background", "rgba(187, 187, 187, .3)");
+			եձ.value("color", "#333");
+			եձ.value("border-radius", "1000px");
+			եձ.value("border", "none");
+			եձ.value("opacity", ".5");
+			եձ.value("transition", "opacity .1s linear");
+			var եղ=բ.select(եձ, "&:hover"); 
+				եղ.value("opacity", "1");
 			
-			var եյ=բ.select(եճ, "&:focus"); 
-				եյ.value("outline", "none");
+			var եճ=բ.select(եձ, "&:focus"); 
+				եճ.value("outline", "none");
 			
 		
 	
 
-var են=բ.select(եի, ".bottom"); 
-	var եշ=բ.select(են, "nav"); 
-		var եո=բ.select(եշ, ".item"); 
-			եո.value("position", "relative");
-			եո.value("cursor", "pointer");
-			եո.value("padding", "8px");
-			var եչ=բ.select(եո, "&:hover::after, &.active::after"); 
-				եչ.value("content", "''");
-				եչ.value("position", "absolute");
-				եչ.value("bottom", "-2px");
-				եչ.value("left, right", "0");
-				եչ.value("height", "4px");
+var եմ=բ.select(եի, ".bottom"); 
+	var եյ=բ.select(եմ, "nav"); 
+		var են=բ.select(եյ, ".item"); 
+			են.value("position", "relative");
+			են.value("cursor", "pointer");
+			են.value("padding", "8px");
+			var եշ=բ.select(են, "&:hover::after, &.active::after"); 
+				եշ.value("content", "''");
+				եշ.value("position", "absolute");
+				եշ.value("bottom", "-2px");
+				եշ.value("left, right", "0");
+				եշ.value("height", "4px");
 			
-			var եպ=բ.select(եո, "&:not(.active):hover::after"); 
-				եպ.value("opacity", ".5");
-				եպ.value("background", "darkviolet");
+			var եո=բ.select(են, "&:not(.active):hover::after"); 
+				եո.value("opacity", ".5");
+				եո.value("background", "darkviolet");
 			
-			var եջ=բ.select(եո, "&.active::after"); 
-				եջ.value("background", "darkviolet");
+			var եչ=բ.select(են, "&.active::after"); 
+				եչ.value("background", "darkviolet");
 			
-			var եռ=բ.select(եո, ".has-errors &.error, .has-warnings &.warn"); 
-				var ես=բ.select(եռ, "&::before"); 
-					ես.value("content", "'• '");
-					ես.value("color", (color.red.text));
-					ես.value("font-weight", "bold");
+			var եպ=բ.select(են, ".has-errors &.error, .has-warnings &.warn"); 
+				var եջ=բ.select(եպ, "&::before"); 
+					եջ.value("content", "'• '");
+					եջ.value("color", (color.red.text));
+					եջ.value("font-weight", "bold");
 				
 			
 		
 	
-	var ետ=բ.select(են, "section"); 
-		ետ.value("height", "calc(100% - 40px)");
+	var ես=բ.select(եմ, "section"); 
+		ես.value("height", "calc(100% - 40px)");
 	
 
-var եր=բ.select(եի, ".fullscreen"); 
-	եր.value("position", "fixed");
-	եր.value("top, bottom, left, right", "0");
+var եվ=բ.select(եի, ".fullscreen"); 
+	եվ.value("position", "fixed");
+	եվ.value("top, bottom, left, right", "0");
 
-var եց=բ.select(եի, ".editor"); 
-	եց.value("display", "inline-block");
-	եց.value("position", "relative");
-	եց.value("width", "calc(100% / " + (showCount.value) + ")");
-	եց.value("height", "100%");
+var ետ=բ.select(եի, ".editor"); 
+	ետ.value("display", "inline-block");
+	ետ.value("position", "relative");
+	ետ.value("width", "calc(100% / " + (showCount.value) + ")");
+	ետ.value("height", "100%");
 
-var եփ=բ.select(եի, ".x"); 
+var եց=բ.select(եի, ".x"); 
+	var եւ=բ.select(եց, ".top, .bottom"); 
+		եւ.value("display", "inline-block");
+		եւ.value("width", "50%");
+		եւ.value("height", "100vh");
+	
+
+var եփ=բ.select(եի, ".y"); 
 	var եք=բ.select(եփ, ".top, .bottom"); 
-		եք.value("display", "inline-block");
-		եք.value("width", "50%");
-		եք.value("height", "100vh");
+		եք.value("height", "50vh");
 	
 
-var եօ=բ.select(եի, ".y"); 
-	var եֆ=բ.select(եօ, ".top, .bottom"); 
-		եֆ.value("height", "50vh");
+var եօ=բ.select(եի, ".text"); 
+	եօ.value("padding", "8px");
+	եօ.value("width, height", "100%");
+	եօ.value("border", "none");
+	եօ.value("font-family", "monospace");
+	եօ.value("resize", "none");
+	var եֆ=բ.select(եօ, "&:focus"); 
+		եֆ.value("outline", "none");
 	
 
-var եև=բ.select(եի, ".text"); 
-	եև.value("padding", "8px");
-	եև.value("width, height", "100%");
-	եև.value("border", "none");
-	եև.value("font-family", "monospace");
-	եև.value("resize", "none");
-	var զա=բ.select(եև, "&:focus"); 
-		զա.value("outline", "none");
-	
-
-var զբ=բ.select(եի, ".color-red"); 
-	զբ.value("color", (color.red.text));
+var եև=բ.select(եի, ".color-red"); 
+	եև.value("color", (color.red.text));
 
 
-var զդ=բ.select(եի, ".CodeMirror"); 
-	զդ.value("height", "100%");
-	զդ.value("border-top, border-bottom", "1px solid silver");
-	var զե=բ.select(զդ, ".error::before, .warn::before"); 
-		զե.value("position", "absolute");
-		զե.value("font-size", ".8em");
+var զբ=բ.select(եի, ".CodeMirror"); 
+	զբ.value("height", "100%");
+	զբ.value("border-top, border-bottom", "1px solid silver");
+	var զգ=բ.select(զբ, ".error::before, .warn::before"); 
+		զգ.value("position", "absolute");
+		զգ.value("font-size", ".8em");
 	
-	var զզ=բ.select(զդ, ".error::before"); 
-		զզ.value("content", "'🛑'");
+	var զդ=բ.select(զբ, ".error::before"); 
+		զդ.value("content", "'🛑'");
 	
-	var զէ=բ.select(զդ, ".warn::before"); 
-		զէ.value("content", "'⚠️'");
+	var զե=բ.select(զբ, ".warn::before"); 
+		զե.value("content", "'⚠️'");
 	
-return եի.content}, գ, ե, [showCount], [])}], [բ.append, document.head, զ, 0, 0]);բ(this, document.body, ե, զ, [բ.update, {args:[բ.attr(2, "class", alignment), բ.attr(2, "class:has-errors", բ.computedObservable(this, ե, [result], function(){return result.value.errors.length}, [])), բ.attr(2, "class:has-warnings", բ.computedObservable(this, ե, [result], function(){return result.value.warnings.length}, []))]}], [բ.body, ժ, function(գ, զ, ժ){
+return եի.content}, գ, ե, [showCount], [])}], [բ.append, document.head, զ, 0, 0]);բ.query(this, document, գ, ".content", false, function(գ, դ){բ(this, գ, ե, զ, [բ.update, {args:[բ.attr(2, "class", alignment), բ.attr(2, "class:has-errors", բ.computedObservable(this, ե, [result], function(){return result.value.errors.length}, [])), բ.attr(2, "class:has-warnings", բ.computedObservable(this, ե, [result], function(){return result.value.warnings.length}, []))]}], [բ.body, ժ, function(գ, զ, ժ){
 
 	բ(this, գ, ե, զ, [բ.create, "section", {args:[բ.attr(0, "class", "top")]}], [բ.body, ժ, function(գ, զ, ժ){
 		բ(this, գ, ե, զ, [բ.create, "section", {args:[բ.attr(0, "class", "filename")]}], [բ.body, ժ, function(գ, զ, ժ){
@@ -378,7 +373,7 @@ return եի.content}, գ, ե, [showCount], [])}], [բ.append, document.head, զ,
 
 	}], [բ.append, գ, զ]);
 
-}])
+}])})
 
 
 });})

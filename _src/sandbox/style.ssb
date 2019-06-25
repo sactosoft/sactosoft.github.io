@@ -5,11 +5,6 @@ var color = {
 		text: "#F44336"
 	}
 };
-body {
-	margin: 0;
-	font-family: ${fontFamily};
-	overflow-y: hidden;
-}
 .top {
 	.filename {
 		span, input, select {

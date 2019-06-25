@@ -3,6 +3,20 @@ var fs = require("fs");
 var Sactory = require("sactory");
 var Transpiler = require("sactory/src/transpiler");
 
+// prepare dist
+try {
+	fs.mkdirSync("./_dist");
+} catch(e) {}
+
+// jsb pages
+fs.readdirSync("./_src/").forEach(page => {
+	if(page.endsWith(".jsb")) {
+		fs.writeFileSync("./_dist/" + page.slice(0, -1), new Transpiler({filename: page, aliases: {content: {element: "content"}}}).transpile(fs.readFileSync("./_src/" + page, "utf8")).source.all);
+	}
+});
+
+var template = require("./_dist/template");
+
 // tutorial
 var tutorial = "./_src/tutorial/";
 var pages = [];
@@ -49,7 +63,12 @@ pages.forEach((page, i) => {
 	fs.writeFileSync("./tutorial/" + page.groupName + "-" + page.lessonName + ".html", document.render());
 });
 
-// sandbox
+// sandbox (html)
+var sandbox = template();
+require("./_dist/sandbox")(sandbox.document);
+fs.writeFileSync("./sandbox.html", sandbox.document.render());
+
+// sandbox (js)
 fs.writeFileSync("./_dist/sandbox.jsb",
 	"@ready(function(){\n\n" +
 	fs.readFileSync("./_src/sandbox/model.jsb", "utf8") +
@@ -57,7 +76,7 @@ fs.writeFileSync("./_dist/sandbox.jsb",
 	fs.readFileSync("./_src/sandbox/view.htmlb", "utf8") +
 	"\n\n});");
 
-// compile add files in /dist
+// compile jsb files in /dist
 fs.readdir("./_dist/", (error, scripts) => {
 	scripts.forEach(script => {
 		if(script.endsWith(".jsb")) {

@@ -1,4 +1,4 @@
-<:body ~class=*alignment ~class:has-errors=*result.errors.length ~class:has-warnings=*result.warnings.length #html :logic :trimmed>
+<".content"* ~class=*alignment ~class:has-errors=*result.errors.length ~class:has-warnings=*result.warnings.length #html :logic :trimmed>
 
 	<section class="top">
 		<section class="filename">
@@ -122,4 +122,4 @@
 
 	</section>
 
-</:body>
+</>

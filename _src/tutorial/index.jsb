@@ -42,9 +42,9 @@ module.exports = function(page, i, pages, @){
 						<a href=pages[i - 1].href class="previous">Previous</a>
 					}
 					<label class="title">
-						<select value=page.href +change={ window.location=this.value }>
-							foreach(pages as page) {
-								<option value=page.href>${page.group}.${page.lesson} ${capitalize(page.groupName)} / ${capitalize(page.lessonName)}</option>
+						<select +change={ window.location=this.value }>
+							foreach(pages as page, index) {
+								<option value=page.href @selected=(i == index)>${page.group}.${page.lesson} ${capitalize(page.groupName)} / ${capitalize(page.lessonName)}</option>
 							}
 						</select>
 					</label>
