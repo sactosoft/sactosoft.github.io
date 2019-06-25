@@ -6,6 +6,8 @@ module.exports = function(page, i, pages, @){
 	<:html lang="en" #html :logic>
 		<:head>
 			<title>${capitalize(page.lessonName)} - ${capitalize(page.groupName)} - Sactory Tutorial</title>
+			<link rel="icon" type="image/png" href="../res/icon.png" />
+			<script src="../dist/sactory.min.js" :ref=@.ownerDocument.scriptElement />
 			<style>
 				body {
 					margin: 0 auto;
@@ -40,7 +42,7 @@ module.exports = function(page, i, pages, @){
 						<a href=pages[i - 1].href class="previous">Previous</a>
 					}
 					<label class="title">
-						<select onchange="window.location=this.value">
+						<select value=page.href +change={ window.location=this.value }>
 							foreach(pages as page) {
 								<option value=page.href>${page.group}.${page.lesson} ${capitalize(page.groupName)} / ${capitalize(page.lessonName)}</option>
 							}

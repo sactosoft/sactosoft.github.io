@@ -1,5 +1,11 @@
 var file, key, hash = null;
 
+var version = **"?";
+
+@subscribe(version, function(value){
+	document.title = "Sandbox - Sactory v" + value;
+});
+
 var tabs = {
 	"output": "Output",
 	"error": "Errors",
@@ -20,11 +26,14 @@ function switchTab(from, to) {
 var inputs = {};
 var outputs = {};
 
+var prefix = "storage";
+
 if(window.location.hash) {
 	hash = JSON.parse(atob(window.location.hash.substr(1)));
+	if(hash.prefix) prefix = hash.prefix;
 } else {
 	file = @watch("snippet", "current_snippet");
-	key = @watch("storage." + *file);
+	key = @watch(prefix + "." + *file);
 }
 
 var defaultContent = {
@@ -78,6 +87,7 @@ var result = @watch((function(){
 			result.before = info.source.before;
 			result.source += info.source.contentOnly;
 			result.after = info.source.after;
+			if(outputs[type]) outputs[type].setValue(info.source.contentOnly);
 		} catch(e) {
 			console.error(e);
 			result.errors.push(e);

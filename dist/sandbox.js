@@ -2,6 +2,12 @@
 
 var file, key, hash = null;
 
+var version = բ.observable("?");
+
+բ.subscribe(ե, version, function(value){
+	document.title = "Sandbox - Sactory v" + value;
+});
+
 var tabs = {
 	"output": "Output",
 	"error": "Errors",
@@ -22,11 +28,14 @@ function switchTab(from, to) {
 var inputs = {};
 var outputs = {};
 
+var prefix = "storage";
+
 if(window.location.hash) {
 	hash = JSON.parse(atob(window.location.hash.substr(1)));
+	if(hash.prefix) prefix = hash.prefix;
 } else {
 	file = բ.observable("snippet", "current_snippet");
-	key = բ.computedObservable(this, ե, [file], function(){return "storage." + file.value}, []);
+	key = բ.computedObservable(this, ե, [file], function(){return prefix + "." + file.value}, []);
 }
 
 var defaultContent = {
@@ -80,6 +89,7 @@ var result = բ.computedObservable(this, ե, [debugMode, content], function(){re
 			result.before = info.source.before;
 			result.source += info.source.contentOnly;
 			result.after = info.source.after;
+			if(outputs[type]) outputs[type].setValue(info.source.contentOnly);
 		} catch(e) {
 			console.error(e);
 			result.errors.push(e);
@@ -248,14 +258,12 @@ return եի.content}, գ, ե, [showCount], [])}], [բ.append, document.head, զ,
 
 	բ(this, գ, ե, զ, [բ.create, "section", {args:[բ.attr(0, "class", "top")]}], [բ.body, ժ, function(գ, զ, ժ){
 		բ(this, գ, ե, զ, [բ.create, "section", {args:[բ.attr(0, "class", "filename")]}], [բ.body, ժ, function(գ, զ, ժ){
-			if(hash) {
-				բ(this, գ, ե, զ, [բ.create, "span", {args:[բ.attr(1, "textContent", hash.name)]}], [բ.append, գ, զ]);
-			} else {
+			if(!hash) {
 				բ(this, գ, ե, զ, [բ.create, "input", {}], [բ.forms, ["", file]], [բ.append, գ, զ]);
 				if(window.localStorage) {
 					բ(this, գ, ե, զ, [բ.create, "select", {}], [բ.body, ժ, function(գ, զ, ժ){
 						բ.forEach(this, Object.keys(window.localStorage).sort() , function(key) {
-							if(key.substr(0, 8) == "storage.") {
+							if(key.substr(0, 8) == prefix + ".") {
 								var value = key.substr(8);
 								բ(this, գ, ե, զ, [բ.create, "option", {args:[բ.attr(0, "value", value), բ.attr(1, "textContent", value)]}], [բ.append, գ, զ]);
 							}
@@ -278,7 +286,7 @@ return եի.content}, գ, ե, [showCount], [])}], [բ.append, document.head, զ,
 				բ(this, գ, ե, զ, [բ.create, "option", {args:[բ.attr(0, "value", "x")]}], [բ.body, ժ, function(գ, զ, ժ){բ.text(գ, ե, զ, "Horizontal");}], [բ.append, գ, զ]);
 			}], [բ.forms, ["", alignment]], [բ.append, գ, զ]);
 			բ(this, գ, ե, զ, [բ.create, "a", {args:[բ.attr(0, "id", "github"), բ.attr(0, "href", "https://github.com/sactory/sactory"), բ.attr(0, "target", "_blank"), բ.attr(1, "hidden", true)]}], [բ.append, գ, զ]);
-			բ(this, գ, ե, զ, [բ.create, "span", {args:[բ.attr(0, "style", "float:right;font-weight:bold;color:darkviolet;cursor:pointer"), բ.attr(1, "textContent", ("Sactory v" + Sactory.VERSION)), բ.attr(3, "click", function(event){ this.previousElementSibling.click() })]}], [բ.append, գ, զ]);
+			բ(this, գ, ե, զ, [բ.create, "span", {args:[բ.attr(0, "style", "float:right;font-weight:bold;color:darkviolet;cursor:pointer"), բ.attr(1, "textContent", բ.computedObservable(this, ե, [version], function(){return ("Sactory v" + version.value)}, [])), բ.attr(3, "click", function(event){ this.previousElementSibling.click() })]}], [բ.append, գ, զ]);
 		}], [բ.append, գ, զ]);
 		բ(this, գ, ե, զ, [բ.create, "section", {args:[բ.attr(0, "class", "input")]}], [բ.body, ժ, function(գ, զ, ժ){
 			բ.forEach(this, ["js", "html", "css"] , function(type) {
@@ -324,8 +332,10 @@ return եի.content}, գ, ե, [showCount], [])}], [բ.append, document.head, զ,
 						window.sandbox = this.contentWindow;
 						բ.query(this, գ, գ, this.contentWindow.document.head, false, function(գ, դ){բ(this, գ, ե, զ, [բ.body, ժ, function(գ, զ, ժ){
 							բ(this, գ, ե, զ, [բ.create, "meta", {args:[բ.attr(0, "charset", "UTF-8")]}], [բ.append, գ, զ]);
-							բ(this, գ, ե, զ, [բ.create, "script", {args:[բ.attr(0, "src", բ.computedObservable(this, ե, [debugMode], function(){return ("./dist/sactory" + (debugMode.value ? ".debug" : "") + ".js")}, []))]}], [բ.append, գ, զ, 0, 0]).onload = function(){
-								բ(this, գ, ե, զ, [բ.create, "script", {args:[բ.attr(1, "textContent", բ.computedObservable(this, ե, [result], function(){return (result.value.before + result.value.source + result.value.after)}, []))]}], [բ.append, գ, զ, 0, 0])
+							բ(this, գ, ե, զ, [բ.create, "script", {args:[բ.attr(0, "src", բ.computedObservable(this, ե, [debugMode], function(){return ((hash && hash.dist || "./dist/") + "sactory" + (debugMode.value ? ".debug" : "") + ".js")}, []))]}], [բ.append, գ, զ, 0, 0]).onload = function(){
+								բ(this, գ, ե, զ, [բ.create, "script", {args:[բ.attr(1, "textContent", բ.computedObservable(this, ե, [result], function(){return (result.value.before + result.value.source + result.value.after)}, []))]}], [բ.append, գ, զ, 0, 0]);
+								// update the loaded version
+								version.value = window.sandbox.Sactory.VERSION;
 							};
 						}])})
 					});
