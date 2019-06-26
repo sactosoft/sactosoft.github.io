@@ -33,7 +33,9 @@ var prefix = "storage";
 if(window.location.hash) {
 	hash = JSON.parse(atob(window.location.hash.substr(1)));
 	if(hash.prefix) prefix = hash.prefix;
-} else {
+}
+
+if(!hash || !hash.content) {
 	file = բ.observable("snippet", "current_snippet");
 	key = բ.computedObservable(this, ե, [file], function(){return prefix + "." + file.value}, []);
 }
@@ -62,7 +64,7 @@ var modes = {
 	css: ["css", "css :logic", "ssb"]
 };
 
-var content = hash ? բ.observable.deep(hash.content) : բ.observable.deep(defaultContent, key.value);
+var content = hash && hash.content ? բ.observable.deep(hash.content) : բ.observable.deep(defaultContent, key.value);
 var showCount = բ.computedObservable(this, ե, [content], function(){return content.value.show.js + content.value.show.html + content.value.show.css}, []);
 var result = բ.computedObservable(this, ե, [debugMode, content], function(){return (function(){
 	debugMode.value; // just to add it as a dependency
@@ -89,7 +91,7 @@ var result = բ.computedObservable(this, ե, [debugMode, content], function(){re
 			result.before = info.source.before;
 			result.source += info.source.contentOnly;
 			result.after = info.source.after;
-			if(outputs[type]) outputs[type].setValue(info.source.contentOnly);
+			if(outputs[type]) outputs[type].setValue(source);
 		} catch(e) {
 			console.error(e);
 			result.errors.push(e);
@@ -102,7 +104,7 @@ var result = բ.computedObservable(this, ե, [debugMode, content], function(){re
 	else switchTab("error", "output");
 	return result;
 })()}, []);
-if(!hash) {
+if(!hash || !hash.content) {
 	if(window.localStorage && window.localStorage.getItem(key.value)) {
 		content.value = JSON.parse(window.localStorage.getItem(key.value));
 	}
@@ -116,6 +118,13 @@ if(!hash) {
 			if(inputs[type]) inputs[type].setValue(content.value.content[type]);
 		}
 	});
+}
+
+if(hash && hash.dist) {
+	բ(this, գ, ե, զ, [բ.create, "script", {args:[բ.attr(0, "src", (hash.dist + "transpiler.min.js"))]}], [բ.append, document.head, զ, 0, 0]).onload = function(){
+		// trigger result update
+		content.update();
+	};
 }
 
 function save() {
@@ -253,7 +262,7 @@ return եի.content}, գ, ե, [showCount], [])}], [բ.append, document.head, զ,
 
 	բ(this, գ, ե, զ, [բ.create, "section", {args:[բ.attr(0, "class", "top")]}], [բ.body, ժ, function(գ, զ, ժ){
 		բ(this, գ, ե, զ, [բ.create, "section", {args:[բ.attr(0, "class", "filename")]}], [բ.body, ժ, function(գ, զ, ժ){
-			if(!hash) {
+			if(!hash || !hash.content) {
 				բ(this, գ, ե, զ, [բ.create, "input", {}], [բ.forms, ["", file]], [բ.append, գ, զ]);
 				if(window.localStorage) {
 					բ(this, գ, ե, զ, [բ.create, "select", {}], [բ.body, ժ, function(գ, զ, ժ){
@@ -321,21 +330,23 @@ return եի.content}, գ, ե, [showCount], [])}], [բ.append, document.head, զ,
 		}], [բ.append, գ, զ]);
 
 		բ(this, գ, ե, զ, [բ.create, "section", {args:[բ.attr(1, "visible", բ.computedObservable(this, ե, [tab], function(){return (tab.value == "output")}, []))]}], [բ.body, ժ, function(գ, զ, ժ){
-			բ.bindIfElse(this, գ, ե, զ, [[function(){return (!result.value.error)}, [result]]], function(գ, ե, զ) {
-				բ(this, գ, ե, զ, [բ.create, "iframe", {args:[բ.attr(0, "style", "width:100%;height:100%;border:none"), բ.attr(0, "src", "about:blank")]}], [բ.body, ժ, function(գ, զ, ժ){
-					բ.on(this, գ, ե, "documentappend", function(){
-						window.sandbox = this.contentWindow;
-						բ.query(this, գ, գ, this.contentWindow.document.head, false, function(գ, դ){բ(this, գ, ե, զ, [բ.body, ժ, function(գ, զ, ժ){
-							բ(this, գ, ե, զ, [բ.create, "meta", {args:[բ.attr(0, "charset", "UTF-8")]}], [բ.append, գ, զ]);
-							բ(this, գ, ե, զ, [բ.create, "script", {args:[բ.attr(0, "src", բ.computedObservable(this, ե, [debugMode], function(){return ((hash && hash.dist || "./dist/") + "sactory" + (debugMode.value ? ".debug" : "") + ".js")}, []))]}], [բ.append, գ, զ, 0, 0]).onload = function(){
-								բ(this, գ, ե, զ, [բ.create, "script", {args:[բ.attr(1, "textContent", բ.computedObservable(this, ե, [result], function(){return (result.value.before + result.value.source + result.value.after)}, []))]}], [բ.append, գ, զ, 0, 0]);
-								// update the loaded version
-								version.value = window.sandbox.Sactory.VERSION;
-							};
-						}])})
-					});
-				}], [բ.append, գ, զ, 0, 0]);
-			});
+			բ.bind(this, գ, ե, զ, result, function(գ, ե, զ, է){բ(this, գ, ե, զ, [բ.body, ժ, function(գ, զ, ժ){
+				բ.bindIfElse(this, գ, ե, զ, [[function(){return (!result.value.error)}, [result]]], function(գ, ե, զ) {
+					բ(this, գ, ե, զ, [բ.create, "iframe", {args:[բ.attr(0, "style", "width:100%;height:100%;border:none"), բ.attr(0, "src", "about:blank")]}], [բ.body, ժ, function(գ, զ, ժ){
+						բ.on(this, գ, ե, "documentappend", function(){
+							window.sandbox = this.contentWindow;
+							բ.query(this, գ, գ, this.contentWindow.document.head, false, function(գ, դ){բ(this, գ, ե, զ, [բ.body, ժ, function(գ, զ, ժ){
+								բ(this, գ, ե, զ, [բ.create, "meta", {args:[բ.attr(0, "charset", "UTF-8")]}], [բ.append, գ, զ]);
+								բ(this, գ, ե, զ, [բ.create, "script", {args:[բ.attr(0, "src", բ.computedObservable(this, ե, [debugMode], function(){return ((hash && hash.dist || "./dist/") + "sactory" + (debugMode.value ? ".debug" : "") + ".js")}, []))]}], [բ.append, գ, զ, 0, 0]).onload = function(){
+									բ(this, գ, ե, զ, [բ.create, "script", {args:[բ.attr(1, "textContent", բ.computedObservable(this, ե, [result], function(){return (result.value.before + result.value.source + result.value.after)}, []))]}], [բ.append, գ, զ, 0, 0]);
+									// update the loaded version
+									version.value = window.sandbox.Sactory.VERSION;
+								};
+							}])})
+						});
+					}], [բ.append, գ, զ, 0, 0]);
+				});
+			}])});
 		}], [բ.append, գ, զ]);
 
 		բ(this, գ, ե, զ, [բ.create, "section", {args:[բ.attr(1, "visible", բ.computedObservable(this, ե, [tab], function(){return (tab.value == "error")}, []))]}], [բ.body, ժ, function(գ, զ, ժ){

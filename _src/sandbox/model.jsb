@@ -31,7 +31,9 @@ var prefix = "storage";
 if(window.location.hash) {
 	hash = JSON.parse(atob(window.location.hash.substr(1)));
 	if(hash.prefix) prefix = hash.prefix;
-} else {
+}
+
+if(!hash || !hash.content) {
 	file = @watch("snippet", "current_snippet");
 	key = @watch(prefix + "." + *file);
 }
@@ -60,7 +62,7 @@ var modes = {
 	css: ["css", "css :logic", "ssb"]
 };
 
-var content = hash ? @watch.deep(hash.content) : @watch.deep(defaultContent, *key);
+var content = hash && hash.content ? @watch.deep(hash.content) : @watch.deep(defaultContent, *key);
 var showCount = @watch(*content.show.js + *content.show.html + *content.show.css);
 var result = @watch((function(){
 	*debugMode; // just to add it as a dependency
@@ -87,7 +89,7 @@ var result = @watch((function(){
 			result.before = info.source.before;
 			result.source += info.source.contentOnly;
 			result.after = info.source.after;
-			if(outputs[type]) outputs[type].setValue(info.source.contentOnly);
+			if(outputs[type]) outputs[type].setValue(source);
 		} catch(e) {
 			console.error(e);
 			result.errors.push(e);
@@ -100,7 +102,7 @@ var result = @watch((function(){
 	else switchTab("error", "output");
 	return result;
 })());
-if(!hash) {
+if(!hash || !hash.content) {
 	if(window.localStorage && window.localStorage.getItem(*key)) {
 		*content = JSON.parse(window.localStorage.getItem(*key));
 	}
@@ -114,6 +116,14 @@ if(!hash) {
 			if(inputs[type]) inputs[type].setValue(*content.content[type]);
 		}
 	});
+}
+
+if(hash && hash.dist) {
+	// replace default transpiler
+	<script src=(hash.dist + "transpiler.min.js") :head />.onload = function(){
+		// trigger result update
+		content.update();
+	};
 }
 
 function save() {

@@ -2,7 +2,7 @@
 
 	<section class="top">
 		<section class="filename">
-			if(!hash) {
+			if(!hash || !hash.content) {
 				<input *form=*file />
 				if(window.localStorage) {
 					<select *form=*file>
@@ -70,21 +70,23 @@
 		</nav>
 
 		<section @visible=(*tab == "output")>
-			if(!*result.error) {
-				<iframe style="width:100%;height:100%;border:none" src="about:blank" #code>
-					@on("documentappend", function(){
-						window.sandbox = this.contentWindow;
-						<{this.contentWindow.document.head}>
-							<meta charset="UTF-8" />
-							<script src=((hash && hash.dist || "./dist/") + "sactory" + (*debugMode ? ".debug" : "") + ".js") />.onload = function(){
-								<script @textContent=(*result.before + *result.source + *result.after) />
-								// update the loaded version
-								*version = window.sandbox.Sactory.VERSION;
-							};
-						</>
-					});
-				</iframe>
-			}
+			<:bind :to=result>
+				if(!*result.error) {
+					<iframe style="width:100%;height:100%;border:none" src="about:blank" #code>
+						@on("documentappend", function(){
+							window.sandbox = this.contentWindow;
+							<{this.contentWindow.document.head}>
+								<meta charset="UTF-8" />
+								<script src=((hash && hash.dist || "./dist/") + "sactory" + (*debugMode ? ".debug" : "") + ".js") />.onload = function(){
+									<script @textContent=(*result.before + *result.source + *result.after) />
+									// update the loaded version
+									*version = window.sandbox.Sactory.VERSION;
+								};
+							</>
+						});
+					</iframe>
+				}
+			</:bind>
 		</section>
 
 		<section @visible=(*tab == "error")>
