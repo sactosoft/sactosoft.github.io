@@ -1,0 +1,31 @@
+.cm-s-sactory {
+
+	&.CodeMirror {
+		background: #fafafc;
+		color: #333;
+		font-family: Consolas, monospace;
+		font-size: 13px;
+	}
+
+	.cm-comment {
+		color: #888;
+		font-style: italic;
+	}
+
+	.cm-number, .cm-string, .cm-string-2 {
+		color: #F57D00;
+	}
+
+	.cm-keyword, .cm-attribute {
+		color: #009695;
+	}
+
+	.cm-atom {
+		color: #3364A4;
+	}
+
+	.cm-tag:not(.cm-bracket) {
+		color: #22863A;
+	}
+
+}

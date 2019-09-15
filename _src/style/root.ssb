@@ -1,0 +1,49 @@
+:root {
+
+	foreach(fonts as font, value) {
+		--font-${font}: ${value};
+	}
+
+	foreach(colors as type, weights) {
+		foreach(weights as weight, value) {
+			--color-${type}-${weight}: ${value};
+		}
+	}
+
+}
+
+*, *::before, *::after {
+	box-sizing: border-box;
+	border-style: solid;
+	border-width: 0;
+}
+
+html {
+	font-size: 62.5%;
+}
+
+body, button, input, textarea, select {
+	margin: 0 auto;
+	font-family: ${fonts.sans};
+	font-size: 14px;
+}
+
+pre, code {
+	font-family: ${fonts.mono};
+}
+
+a {
+	text-decoration: none;
+}
+
+.nowrap {
+	white-space: nowrap;
+}
+
+foreach(fonts as font, value) {
+
+	.font-${font} {
+		font-family: ${value};
+	}
+
+}

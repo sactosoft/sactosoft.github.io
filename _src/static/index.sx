@@ -1,0 +1,46 @@
+module.exports = class {
+	
+	render({root, version}) {
+		<:head>
+			<title>Sactory — JavaScript library for creating XML-like documents</title>
+		</:head>
+		return <div>
+			<style :scoped>
+				text-align: center;
+				font-family: Consolas, monospace;
+				font-size: 32px;
+				color: white;
+				display: flex;
+
+				& > * {
+					position: absolute;
+					top, left: 50%;
+					transform: translate(-50%, -50%);
+					overflow: hidden;
+				}
+
+				.heptagon {
+					height: calc(100vh - 128px);
+					animation: rotate 70s linear infinite;
+					@keyframes rotate {
+						from < transform: rotate(0deg);
+						to < transform: rotate(360deg);
+					}
+				}
+			</style>
+			<div>
+				<div class="heptagon">
+					<svg viewBox="0 0 1000 1000" &height="100%">
+						<polygon id="left" fill="#7000a0" points="500,0 109,188 13,611 283,950 717,950 987,611 891,188" />
+						<polygon id="right" fill="#7000a0" points="695.5,94 283,950 717,950 987,611 891,188" />
+					</svg>
+				</div>
+			</div>
+			<div>
+				<p>Sactory is still under construction.</p>
+				<p>v${version}</p>
+			</div>
+		</div>
+	}
+
+};

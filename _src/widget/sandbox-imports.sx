@@ -1,0 +1,13 @@
+const codemirror = "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/";
+
+module.exports = function(){
+	return <#document-fragment>
+		<link rel="stylesheet" href=`${codemirror}codemirror.min.css` />
+		<script src=`${codemirror}codemirror.min.js`></script>
+		<script src=`${codemirror}mode/xml/xml.min.js`></script>
+		<script src=`${codemirror}mode/javascript/javascript.min.js`></script>
+		<script src=`${codemirror}mode/jsx/jsx.min.js`></script>
+		<script src="./dist/sactory.min.js"></script>
+		<script src="./dist/transpiler.min.js"></script>
+	</#document-fragment>
+};

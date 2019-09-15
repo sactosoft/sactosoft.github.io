@@ -1,0 +1,190 @@
+class Sandbox {
+
+	constructor({filename = "", mode = "auto-code@logic", source, orientation, readonly = false, hash = true}) {
+		this.es6 = this.checkES6();
+		this.orientation = orientation || "x";
+		this.readonly = readonly;
+		if(hash && window.location.hash) {
+			try {
+				this.hash = JSON.parse(atob(window.location.hash.substr(1)));
+			} catch(e) {}
+		}
+		if(!source) {
+			source = (this.es6 ? "let" : "var") + " count = &0;\n\n<:body>\n\t<button on:click={{*count++}}>Clicked ${*count} times</button>\n</:body>\n";
+		}
+		const hd = this.hash && this.hash.data;
+		this.data = {
+			filename: &(hd && hd.filename || filename),
+			mode: &(hd && hd.mode || mode),
+			source: hd && hd.source ? &hd.source : (source ? &source : (&source).localStorage("sandbox_source"))
+		};
+		this.data.editorSource = this.data.*source;
+		this.result = async & => Transpiler.transpile({filename: this.data.*filename, mode: this.data.*mode, es6: this.es6, sandboxed: true}, this.data.*source);
+	}
+
+	checkES6() {
+		try {
+			eval("() => {}");
+			return true;
+		} catch(e) {
+			return false;
+		}
+	}
+
+	save() {
+		this.data.source.update(this.data.editorSource, 8934);
+	}
+
+	initCodeMirror(element, readOnly, mode) {
+		const editor = CodeMirror.fromTextArea(element, {
+			lineNumbers: true,
+			indentWithTabs: true,
+			smartIndent: false,
+			lineWrapping: true,
+			theme: "sactory",
+			readOnly, mode
+		});
+		editor.setSize("100%", "100%");
+		return editor;
+	}
+
+	initSourceEditor(element) {
+		const editor = this.initCodeMirror(element, this.readonly, "jsx");
+		editor.on("change", () => this.data.editorSource = editor.getValue());
+		this.data.source.$$subscribe(value => editor.setValue(value), 8934);
+		<:use (element.nextElementSibling) +[[save]]:prevent={{this.save()}} />
+	}
+
+	initResultEditor(element) {
+		const editor = this.initCodeMirror(element, true, "javascript");
+		this.result.$$subscribe(value => editor.setValue(value.source.contentOnly));
+	}
+
+	editInSandbox() {
+		const { filename, source } = this.data;
+		window.open("./sandbox#" + btoa(JSON.stringify({data: {filename, source}})));
+	}
+	
+	render() {
+		return <div data-orientation=this.orientation>
+			<div class="top">
+				<div class="actions">
+					<div>
+						<div class="left">
+							<input class="input" placeholder="File Name" @disabled=this.readonly *text=this.data.*filename />
+						</div>
+						<div class="right">
+							<input class="input" placeholder="Mode" @disabled=this.readonly *text::change=this.data.*mode />
+							if(this.readonly) {
+								<button class="button primary" +click={{this.editInSandbox()}}>Edit in Sandbox</button>
+							} else {
+								<button class="button primary" +click={{this.save()}}>Run</button>
+							}
+						</div>
+					</div>
+				</div>
+				<div class="editor">
+					<textarea @value=this.data.editorSource +documentappend={{this.initSourceEditor(target)}} />
+				</div>
+			</div>
+			<div class="bottom">
+				<div class="frame">
+					<iframe srcdoc=`<script src="${this.hash && this.hash.dist || "./dist/"}sactory.min.js"></script><script>window.onload=function(){${this.*result.source.all}}</script>` />
+				</div>
+				<div class="source">
+					<textarea @value=this.^result.source.contentOnly +documentappend={{this.initResultEditor(target)}} />
+				</div>
+			</div>
+		</div>
+	}
+
+	static style() {
+		return <style>
+			position: absolute;
+			top, bottom, left, right: 0;
+
+			.top, .bottom {
+				position: absolute;
+			}
+
+			&[data-orientation='x'] {
+				.top, .bottom {
+					top, bottom: 0;
+					width: 50%;
+				}
+				.top {
+					left: 0;
+					border-right: 2px solid transparent;
+				}
+				.bottom {
+					right: 0;
+					border-left: 2px solid transparent;
+				}
+			}
+
+			&[data-orientation='y'] {
+				.top, .bottom {
+					left, right: 0;
+					width: 50%;
+				}
+				.top < top: 0;
+				.bottom < bottom: 0;
+			}
+
+			.top {
+				.actions, .editor {
+					position: absolute;
+					left, right: 0;
+				}
+				.actions {
+					top: 0;
+					height: 64px;
+					border-bottom: 2px solid transparent;
+					& > div {
+						background: white;
+						height: 100%;
+						padding: 0 12px;
+						display: flex;
+						justify-content: space-between;
+						.left, .right {
+							display: flex;
+							align-items: center;
+							* + * {
+								margin-left: 12px;
+							}
+						}
+					}
+				}
+				.editor {
+					top: 64px;
+					bottom: 0;
+					border-top: 2px solid transparent;
+				}
+			}
+
+			.bottom {
+				.frame, .source {
+					position: absolute;
+					height: 50%;
+					left, right: 0;
+				}
+				.frame {
+					width: 100%;
+					top: 0;
+					border-bottom: 2px solid transparent;
+					iframe {
+						width, height: 100%;
+						margin: 0;
+						border: 0;
+						background: white;
+					}
+				}
+				.source {
+					bottom: 0;
+					border-top: 2px solid transparent;
+				}
+			}
+		</style>
+	}
+
+};

@@ -1,0 +1,168 @@
+.button {
+	
+	&:focus {
+		outline: none;
+	}
+	
+	background: transparent;
+	color: white;
+	padding: .6em 1.2em;
+	border: none;
+	border-radius: .4rem;
+	text-decoration: none;
+
+	&.compact {
+		padding: .4em .8em;
+	}
+	
+	&:not(.flat) {
+	
+		position: relative;
+		border-top: 0 solid transparent;
+		border-bottom: .2rem solid transparent;
+		z-index: 1;
+		
+		&::before, &::after {
+			content: "";
+			position: absolute;
+			left: 0;
+			right: 0;
+			border-radius: .4rem;
+			z-index: -1;
+		}
+		
+		/* 3d effect */
+		&::before {
+			top: .4rem;
+			bottom: -.2rem;
+		}
+		
+		/* background */
+		&::after {
+			top: 0;
+			bottom: .2rem;
+		}
+		
+		&:not(:disabled):not(.disabled) {
+		
+			&:hover {
+				border-top-width: .1rem;
+				border-bottom-width: .1rem;
+				&::before {
+					top: .3rem;
+					bottom: -.1rem;
+				}
+			}
+			
+			&:active {
+				border-top-width: .2rem;
+				border-bottom-width: 0;
+				&::before {
+					top: .2rem;
+					bottom: 0;
+				}
+			}
+			
+		}
+		
+	}
+	
+	&.flat {
+		transition: color .1s linear;
+	}
+		
+	&.lite {
+		&, &::before, &::after {
+			transition: color .1s linear, background .1s linear;
+		}
+	}
+	
+	&.semi-rounded {
+		&, &::before, &::after {
+			border-radius: .45em;
+		}
+	}
+	
+	&.rounded {
+		&, &::before, &::after {
+			border-radius: .9em;
+		}
+	}
+	
+	&.pill {
+		&, &::before, &::after {
+			border-radius: 1000px;
+		}
+	}
+	
+	&.squared {
+		padding: .3em;
+		&:not(.flat) {
+			padding: calc(.3em - .1rem) .3em;
+		}
+	}
+	
+	/*&.no-text > * {
+		margin-top: $padding-horizontal - $padding-vertical;
+		margin-bottom: $padding-horizontal - $padding-vertical;
+	}*/
+	
+	&:not(:disabled):not(.disabled) {
+		cursor: pointer;
+	}
+	
+	&.icon-left > .icon {
+		margin-right: .6em;
+	}
+	
+	&.icon-right > .icon {
+		margin-left: .6em;
+	}
+
+	foreach(colors as type, color) {
+
+		&.${type} {
+
+			const c300 = @lighten(color, .25);
+			const c500 = color;
+			const c700 = @darken(color, .25);
+						
+			&:not(.flat) {
+			
+				&:not(.lite), &.lite:hover, &.lite:active {
+			
+					&::before {
+						background: ${c700};
+					}
+					
+					&::after {
+						background: ${c500};
+					}
+					
+				}
+				
+			}
+			
+			&.flat {
+			
+				&:not(.lite), &.lite:hover, &.lite:active {
+			
+					background: ${c500};
+				
+					&:hover {
+						background: ${@mix(c500, c700)};
+					}
+					
+					&:active {
+						background: ${c700};
+					}
+					
+				}
+				
+			}
+
+		}
+
+	}
+
+}

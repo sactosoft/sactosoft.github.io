@@ -2,7 +2,7 @@
 	"name": "sactory.github.io",
 	"main": "index.js",
 	"scripts": {
-		"build": "node ./index.js"
+		"build": "node ./_script/build.js"
 	},
 	"repository": {
 		"type": "git",
@@ -13,6 +13,8 @@
 		"url": "https://github.com/sactory/sactory.github.io/issues"
 	},
 	"devDependencies": {
-		"sactory": "^0.102.0"
+		"mkdirp": "^0.5.1",
+		"ncp": "^2.0.0",
+		"sactory": "^0.142.0"
 	}
 }

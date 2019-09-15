@@ -1,0 +1,42 @@
+body {
+	background: linear-gradient(135deg, #9400d3, #7000a0);
+}
+
+.header {
+
+	margin: 0 auto;
+	width: calc(100% - 32px);
+	height: 64px;
+	display: flex;
+	justify-content: space-between;
+
+	&, * {
+		color: white;
+		font-family: Consolas, monospace;
+	}
+
+	& > * {
+		display: flex;
+		align-items: center;
+		& > * + * {
+			margin-left: 12px;
+		}
+	}
+
+	select {
+		background: transparent;
+		option {
+			color: black;
+		}
+		&:focus {
+			outline: none;
+		}
+	}
+
+}
+
+.content {
+	position: absolute;
+	top: 64px;
+	right, bottom, left: 0;
+}

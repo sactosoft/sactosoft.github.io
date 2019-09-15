@@ -1,0 +1,43 @@
+const fs = require("fs");
+const sandboxImports = require("./sandbox-imports");
+
+module.exports = class {
+	
+	render({root, version}) {
+		<:head>
+			<title>Examples — Sactory v${version}</title>
+			<[sandboxImports] />
+			<script src=`${root}dist/examples.js` />
+		</:head>
+		return <div>
+			<style :scoped>
+				& > * {
+					position: absolute;
+					top, bottom: 0;
+				}
+				& > .examples {
+					left: 0;
+					width: 256px;
+					background: white;
+				}
+				& > .sandbox {
+					right: 0;
+					left: 260px;
+				}
+			</style>
+			<div class="examples">
+				<div>
+					<ul &margin="0" &padding="16px 32px">
+						foreach(fs.readdirSync("./_src/res/examples") as example) {
+							<li><a href=example ~text=example.slice(0, -3) /></li>
+						}
+					</ul>
+				</div>
+			</div>
+			<div class="sandbox">
+				<#app $name="Sandbox" $src=`${root}dist/sandbox.js` $args.readonly $args.source="<:body>\n\tClick an <b>example</b> to start!\n</:body>\n" />
+			</div>
+		</div>
+	}
+
+};
