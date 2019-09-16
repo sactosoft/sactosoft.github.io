@@ -1,0 +1,11 @@
+module.exports = class {
+
+	render() {
+		return <#document-fragment>
+			<p>
+				The main goal of Sactory is...
+			</p>
+		</#document-fragment>
+	}
+
+};

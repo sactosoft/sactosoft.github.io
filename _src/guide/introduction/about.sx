@@ -1,0 +1,7 @@
+let count = &0;
+
+<:body>
+	<p>Count to ${*count}</p>
+	<button on:click={{*count++}}>Add</button>
+	<button on:click={{*count--}}>Remove</button>
+</:body>

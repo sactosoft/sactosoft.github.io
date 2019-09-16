@@ -1,0 +1,101 @@
+const capitalize = value => value.charAt(0).toUpperCase() + value.substr(1);
+
+module.exports = class {
+
+	constructor(section) {
+		this.section = section;
+	}
+
+	render({version, sections}) {
+		<:head>
+			<title>${capitalize(this.section)} — Guide — Sactory v${version}</title>
+		</:head>
+		return <div>
+			<div class="menu">
+				foreach(sections as [section, subs]) {
+					<a href=`./${section}` ~text=capitalize(section) />
+					<div class="section">
+						foreach(subs as sub) {
+							<a href=`./${section}#${sub}` ~text=capitalize(sub) />
+						}
+					</div>
+				}
+			</div>
+			<div class="sections">
+				const index = sections.findIndex(([section]) => section == this.section);
+				<h1>
+					if(index > 0) {
+						<a href=`./${sections[index - 1][0]}` ~text="<=" />
+					}
+					<span ~text=capitalize(this.section) />
+					if(index < sections.length - 1) {
+						<a href=`./${sections[index + 1][0]}` ~text="=>" />
+					}
+				</h1>
+				foreach(sections[index][1] as sub) {
+					<h2 id=sub class="section-title">
+						<a href=`#${sub}`>#</a>
+						<span ~text=capitalize(sub) />
+						<a href=`../tour/${this.section}/${sub}` target="_blank" title="Open in the interactive tour">⤴</a>
+					</h2>
+					<hr />
+					<[require(`./tour_${this.section}_${sub}`)] $guide />
+				}
+			</div>
+		</div>
+	}
+
+	static style() {
+		return <style>
+			position: relative;
+			margin: 0 auto;
+			width, height: 100%;
+			max-width: 1024px;
+			border-radius: 5px;
+			overflow: hidden;
+
+			.menu, .sections {
+				position: absolute;
+				top, bottom: 0;
+				background: white;
+				padding: 16px;
+				overflow-y: auto;
+				.section {
+					padding-left: 16px;
+				}
+			}
+
+			.menu {
+				left: 0;
+				width: 256px;
+				a {
+					display: block;
+					color: #333;
+					font-weight: normal;
+				}
+				& > a {
+					font-weight: bold;
+				}
+			}
+
+			.sections {
+				right: 0;
+				left: 260px;
+				.section-title {
+					margin-top: 32px;
+					* + * {
+						margin-left: 8px;
+					}
+				}
+			}
+
+			@media screen and (max-width: 1056px) {
+				& {
+					max-width: 100%;
+					border-radius: 0;
+				}
+			}
+		</style>
+	}
+
+};

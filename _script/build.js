@@ -10,6 +10,10 @@ const { transpile } = require(sactory + "transpiler");
 
 const mode = "auto-code@logic,trimmed";
 
+const sections = [
+	["introduction", ["about", "features"]]
+];
+
 const nop = () => {};
 
 // create array with supported versions
@@ -60,14 +64,18 @@ const static = (folder, parents) => {
 		// add parent
 		parents = parents.concat(get("_template"));
 	}
-	fs.readdirSync(folder).forEach(fname => {
+	fs.readdirSync(folder).reverse().forEach(fname => {
 		const stat = fs.statSync(folder + "/" + fname);
 		if(stat.isDirectory()) {
 			static(folder + fname + "/", parents);
 		} else if(stat.isFile()) {
 			if(fname != "_template.sx") {
 				const widget = get(fname.slice(0, -3));
-				write(folder.substr(base.length) + fname.slice(0, -2) + "html", new parents[0]({version, root, children: parents.slice(1).concat(widget)}).render().render());
+				write(folder.substr(base.length) + fname.slice(0, -2) + "html", new parents[0]({
+					version, root, sections,
+					path: folder.substr(base.length) + fname.slice(0, -3),
+					children: parents.slice(1).concat(widget)
+				}).render().render());
 			}
 		}
 	});
@@ -91,7 +99,7 @@ fs.readdirSync(sactoryDist).forEach(filename => {
 });
 
 // compile css
-require("../../sactify/src/build")("./_src/style", "./css");
+//require("../../sactify/src/build")("./_src/style", "./css");
 
 // copy resources
 ncp("./_src/res", "./res");

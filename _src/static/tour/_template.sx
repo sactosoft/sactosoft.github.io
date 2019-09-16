@@ -1,0 +1,52 @@
+const fs = require("fs");
+
+const sandboxImports = require("./sandbox-imports");
+
+const capitalize = value => value.charAt(0).toUpperCase() + value.substr(1);
+
+module.exports = class {
+	
+	render({version, root, path, sections, children}) {
+		const [section, sub] = path.substr(5).split("/");
+		<:head>
+			<title>${capitalize(sub)} — ${capitalize(section)} — Tutorial — Sactory v${version}</title>
+			<[sandboxImports] $root=root />
+		</:head>
+		return <div>
+			<style :scoped>
+				position: absolute;
+				top, bottom, left, right: 0;
+				overflow: hidden;
+
+				.description, .sandbox {
+					position: absolute;
+					top, bottom: 0;
+				}
+
+				.description {
+					left: 0;
+					width: 768px;
+					background: white;
+					padding: 16px;
+				}
+
+				.sandbox {
+					right: 0;
+					left: 772px;
+				}
+			</style>
+			<div class="description">
+				<h1 ~text=capitalize(section) />
+				<h2 ~text=capitalize(sub) />
+				<[children[0]] $children=children.slice(1) />
+			</div>
+			<div class="sandbox">
+				<#app $name="Sandbox" $src=`${root}dist/sandbox.js`
+					$args.filename=`${section}/${sub}.sx` $args.root=`${root}dist/`
+					$args.orientation="y" $args.hide=["result"]
+					$args.source=fs.readFileSync(`./_src/guide/${section}/${sub}.sx`, "utf8") />
+			</div>
+		</div>
+	}
+
+};

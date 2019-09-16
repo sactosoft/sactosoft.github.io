@@ -1,0 +1,46 @@
+module.exports = class {
+
+	render({guide}) {
+		const type = guide ? "guide" : "tour";
+		return <#document-fragment>
+			<p>
+				Sactory is a <strong>library</strong> \for creating
+				and manipulating XML-like documents, like <strong>HTML</strong> and SVG.
+			</p>
+			<p>
+				It provides a transpiler that converts <code>.sy</code> and <code>.sx</code>
+				source code to JavaScript and a runtime library that is used by the
+				generated code to create and modify the DOM nodes and do even more.
+			</p>
+			<h3>About this ${type}</h3>
+			<p>
+				This ${type} will guide through the various features of Sactory, from installation
+				and syntax to API and advanced usage.<br />
+				For every section an embedded sandbox with related code is available
+				to play with. The sandbox allows you to write Sactory code and immeditely see the
+				result of the transpiled code when pressing <code>run</code> or hitting <code>ctrl-s</code>.
+				An extended version of the sandbox is also available <a href="/sandbox" target="_blank">in
+				its own page</a>, with more advanced functionality like visualization of the generated code,
+				saving of code snippets and sharing.<br />
+				if(guide) {
+					This guide is also available with interactive examples as a
+					<a href="/tour/introduction/about">tour</a>.
+				} else {
+					This tour is also available as a compact version, without any interactive example,
+					in the <a href="/guide/introduction">guide</a>.
+				}
+			</p>
+			<p>
+				This ${type} assumes intermediate to advanced knowledge of JavaScript, especially
+				the ECMAScript 2015+ features and the DOM. It is very difficult to understand Sactory's
+				syntax without knowing JavaScript's first, so if you are not familiar with these technologies
+				it might be a good idea to improve your skills in the used technologies and JavaScript in general.
+			</p>
+			<p>
+				Also note that all the examples in the ${type} are written using ES6 syntax and the interactive
+				examples will not run on outdated browsers.
+			</p>
+		</#document-fragment>
+	}
+
+};

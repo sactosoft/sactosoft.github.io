@@ -1,14 +1,16 @@
 class Sandbox {
 
-	constructor({filename = "", mode = "auto-code@logic", source, orientation, readonly = false, hash = true}) {
+	constructor({filename = "", mode = "auto-code@logic", root, source, orientation, hide, readonly = false, hash = true}) {
 		this.es6 = this.checkES6();
 		this.orientation = orientation || "x";
+		this.hide = hide || [];
 		this.readonly = readonly;
 		if(hash && window.location.hash) {
 			try {
 				this.hash = JSON.parse(atob(window.location.hash.substr(1)));
 			} catch(e) {}
 		}
+		this.root = root || this.hash && this.hash.dist || "./dist/";
 		if(!source) {
 			source = (this.es6 ? "let" : "var") + " count = &0;\n\n<:body>\n\t<button on:click={{*count++}}>Clicked ${*count} times</button>\n</:body>\n";
 		}
@@ -67,6 +69,9 @@ class Sandbox {
 	
 	render() {
 		return <div data-orientation=this.orientation>
+			foreach(this.hide as value) {
+				<:element ~class=`hide-${value}` />
+			}
 			<div class="top">
 				<div class="actions">
 					<div>
@@ -89,7 +94,7 @@ class Sandbox {
 			</div>
 			<div class="bottom">
 				<div class="frame">
-					<iframe srcdoc=`<script src="${this.hash && this.hash.dist || "./dist/"}sactory.min.js"></script><script>window.onload=function(){${this.*result.source.all}}</script>` />
+					<iframe srcdoc=`<script src="${this.root}sactory.min.js"></script><script>window.onload=function(){${this.*result.source.all}}</script>` />
 				</div>
 				<div class="source">
 					<textarea @value=this.^result.source.contentOnly +documentappend={{this.initResultEditor(target)}} />
@@ -125,10 +130,16 @@ class Sandbox {
 			&[data-orientation='y'] {
 				.top, .bottom {
 					left, right: 0;
-					width: 50%;
+					height: 50%;
 				}
-				.top < top: 0;
-				.bottom < bottom: 0;
+				.top {
+					top: 0;
+					border-bottom: 2px solid transparent;
+				}
+				.bottom {
+					bottom: 0;
+					border-top: 2px solid transparent;
+				}
 			}
 
 			.top {
@@ -182,6 +193,18 @@ class Sandbox {
 				.source {
 					bottom: 0;
 					border-top: 2px solid transparent;
+				}
+			}
+
+			&.hide-result {
+				.bottom {
+					.frame {
+						height: 100%;
+						border-bottom-width: 0;
+					}
+					.source {
+						display: none;
+					}
 				}
 			}
 		</style>

@@ -1,14 +1,16 @@
 /*! Transpiled from ./_src/dist/sandbox.sx using Sactory v0.142.0. Do not edit manually. */var ջթ=Sactory;var ջժ=ջթ.chain;var ջի={};class Sandbox {
 
-	constructor({filename = "", mode = "auto-code@logic", source, orientation, readonly = false, hash = true}) {var ջլ=ջթ.cfa(ջի, arguments, 1);
+	constructor({filename = "", mode = "auto-code@logic", root, source, orientation, hide, readonly = false, hash = true}) {var ջլ=ջթ.cfa(ջի, arguments, 1);
 		this.es6 = this.checkES6();
 		this.orientation = orientation || "x";
+		this.hide = hide || [];
 		this.readonly = readonly;
 		if(hash && window.location.hash) {
 			try {
 				this.hash = JSON.parse(atob(window.location.hash.substr(1)));
 			} catch(e) {}
 		}
+		this.root = root || this.hash && this.hash.dist || "./dist/";
 		if(!source) {
 			source = (this.es6 ? "let" : "var") + " count = &0;\n\n<:body>\n\t<button on:click={{*count++}}>Clicked ${*count} times</button>\n</:body>\n";
 		}
@@ -67,6 +69,9 @@
 	
 	render() {var ջլ=ջթ.cfa(ջի, arguments, 0);
 		return ջժ(ջլ, [ջժ.create, "div", [[ [0, "data-orientation", this.orientation]]]], [ջժ.body, ջլ => {
+			ջթ.forEachArray(this.hide , (value) => {
+				ջժ(ջլ, [ջժ.update, [[ [5, "class", `hide-${value}`]]]] );
+			});
 			ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "top"]]]], [ջժ.body, ջլ => {
 				ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "actions"]]]], [ջժ.body, ջլ => {
 					ջժ(ջլ, [ջժ.create, "div", []], [ջժ.body, ջլ => {
@@ -89,7 +94,7 @@
 			}], [ջժ.append]);
 			ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "bottom"]]]], [ջժ.body, ջլ => {
 				ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "frame"]]]], [ջժ.body, ջլ => {
-					ջժ(ջլ, [ջժ.create, "iframe", [[ [0, "srcdoc", ջթ.bo(() => `<script src="${this.hash && this.hash.dist || "./dist/"}sactory.min.js"></script><script>window.onload=function(){${this.result.value.source.all}}</script>`, [this.result])]]]], [ջժ.append] );
+					ջժ(ջլ, [ջժ.create, "iframe", [[ [0, "srcdoc", ջթ.bo(() => `<script src="${this.root}sactory.min.js"></script><script>window.onload=function(){${this.result.value.source.all}}</script>`, [this.result])]]]], [ջժ.append] );
 				}], [ջժ.append]);
 				ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "source"]]]], [ջժ.body, ջլ => {
 					ջժ(ջլ, [ջժ.create, "textarea", [[ [1, "value", this.result.value.source.contentOnly], [3, "documentappend", (event, target) => {this.initResultEditor(target)}]]]], [ջժ.append] );
@@ -125,10 +130,16 @@
 			var ջմ=ջթ.select(ջծ, `&[data-orientation='y']`); 
 				var ջյ=ջթ.select(ջմ, `.top, .bottom`); 
 					ջյ.value(`left, right`, `0`);
-					ջյ.value(`width`, `50%`);
+					ջյ.value(`height`, `50%`);
 				
-				var ջն=ջթ.select(ջմ, `.top`);  ջն.value(`top`, `0`);
-				var ջշ=ջթ.select(ջմ, `.bottom`);  ջշ.value(`bottom`, `0`);
+				var ջն=ջթ.select(ջմ, `.top`); 
+					ջն.value(`top`, `0`);
+					ջն.value(`border-bottom`, `2px solid transparent`);
+				
+				var ջշ=ջթ.select(ջմ, `.bottom`); 
+					ջշ.value(`bottom`, `0`);
+					ջշ.value(`border-top`, `2px solid transparent`);
+				
 			
 
 			var ջո=ջթ.select(ջծ, `.top`); 
@@ -182,6 +193,18 @@
 				var ջփ=ջթ.select(ջտ, `.source`); 
 					ջփ.value(`bottom`, `0`);
 					ջփ.value(`border-top`, `2px solid transparent`);
+				
+			
+
+			var ջք=ջթ.select(ջծ, `&.hide-result`); 
+				var ջօ=ջթ.select(ջք, `.bottom`); 
+					var ջֆ=ջթ.select(ջօ, `.frame`); 
+						ջֆ.value(`height`, `100%`);
+						ջֆ.value(`border-bottom-width`, `0`);
+					
+					var ջև=ջթ.select(ջօ, `.source`); 
+						ջև.value(`display`, `none`);
+					
 				
 			ջժ(ջլ, [ջժ.text, `
 		`]);return ջծ.content}, [], [])}], [ջժ.append]);

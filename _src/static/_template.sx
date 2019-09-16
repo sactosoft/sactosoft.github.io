@@ -1,8 +1,10 @@
 module.exports = class {
 	
-	constructor({version, root, children}) {
+	constructor({version, root, path, sections, children}) {
 		this.version = version;
 		this.root = root;
+		this.path = path;
+		this.sections = sections;
 		this.children = children;
 	}
 
@@ -13,7 +15,7 @@ module.exports = class {
 				<link rel="stylesheet" href=`${this.root}css/theme.css` />
 				<script src="./versions.js" />
 			</:head>
-			<:body>
+			<:body &color="#333">
 				<div class="header">
 					<div>
 						<img src=`${this.root}res/icon_white.svg` &height="32px" />
@@ -24,14 +26,28 @@ module.exports = class {
 							<option value=this.version ~text=this.version />
 						</select>
 						<a href=`${this.root}sandbox`>Sandbox</a>
-						<a href=`${this.root}guide`>Guide</a>
+						<a href=`${this.root}guide/${this.sections[0][0]}`>Guide</a>
 						<a href=`${this.root}api`>API</a>
 						<a href=`${this.root}examples`>Examples</a>
 						<a href="https://github.com/sactory/sactory" target="_blank">GitHub</a>
 					</div>
 				</div>
 				<div class="content">
-					<[this.children[0]] $version=this.version $root=this.root $children=this.children.slice(1) />
+					<style :scoped>
+						p {
+							line-height: 1.6em;
+							word-spacing: .05em;
+						}
+
+						a {
+							color: #48BB78;
+							font-weight: 600;
+							&:hover {
+								color: #38A169;
+							}
+						}
+					</style>
+					<[this.children[0]] $version=this.version $root=this.root $path=this.path $sections=this.sections $children=this.children.slice(1) />
 				</div>
 			</:body>
 		</#document>
