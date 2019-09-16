@@ -30,7 +30,7 @@ module.exports = class {
 					in the <a href="/guide/introduction">guide</a>.
 				}
 			</p>
-			<p>
+			<p class="toast warning">
 				This ${type} assumes intermediate to advanced knowledge of JavaScript, especially
 				the ECMAScript 2015+ features and the DOM. It is very difficult to understand Sactory's
 				syntax without knowing JavaScript's first, so if you are not familiar with these technologies

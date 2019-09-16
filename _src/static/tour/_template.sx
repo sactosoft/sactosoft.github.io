@@ -25,14 +25,16 @@ module.exports = class {
 
 				.description {
 					left: 0;
-					width: 768px;
+					width: calc(50% - 2px);
+					max-width: 768px;
 					background: white;
 					padding: 16px;
 				}
 
 				.sandbox {
 					right: 0;
-					left: 772px;
+					min-width: calc(100% - 772px);
+					width: calc(50% - 2px);
 				}
 			</style>
 			<div class="description">

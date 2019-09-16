@@ -36,7 +36,9 @@ module.exports = class {
 					<h2 id=sub class="section-title">
 						<a href=`#${sub}`>#</a>
 						<span ~text=capitalize(sub) />
-						<a href=`../tour/${this.section}/${sub}` target="_blank" title="Open in the interactive tour">⤴</a>
+						<a href=`../tour/${this.section}/${sub}` target="_blank" title="Open in the interactive tour">
+							<i class="far fa-keyboard" />
+						</a>
 					</h2>
 					<hr />
 					<[require(`./tour_${this.section}_${sub}`)] $guide />

@@ -12,7 +12,11 @@ module.exports = {
 	},
 
 	colors: {
-		primary: "hsl(210, 74%, 42%)"
+		default: "#f2f5f8",
+		primary: "hsl(210, 74%, 42%)",
+		success: "#4eb750",
+		warning: "#ffcd02",
+		danger: "#e74c3c"
 	},
 
 	positions: ["top", "right", "bottom", "left"],

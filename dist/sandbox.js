@@ -1,9 +1,7 @@
 /*! Transpiled from ./_src/dist/sandbox.sx using Sactory v0.142.0. Do not edit manually. */var ջթ=Sactory;var ջժ=ջթ.chain;var ջի={};class Sandbox {
 
-	constructor({filename = "", mode = "auto-code@logic", root, source, orientation, hide, readonly = false, hash = true}) {var ջլ=ջթ.cfa(ջի, arguments, 1);
+	constructor({root, filename = "", mode = "auto-code@logic", source, readonly = false, hash = true}) {var ջլ=ջթ.cfa(ջի, arguments, 1);
 		this.es6 = this.checkES6();
-		this.orientation = orientation || "x";
-		this.hide = hide || [];
 		this.readonly = readonly;
 		if(hash && window.location.hash) {
 			try {
@@ -11,15 +9,41 @@
 			} catch(e) {}
 		}
 		this.root = root || this.hash && this.hash.dist || "./dist/";
-		if(!source) {
-			source = (this.es6 ? "let" : "var") + " count = &0;\n\n<:body>\n\t<button on:click={{*count++}}>Clicked ${*count} times</button>\n</:body>\n";
-		}
-		const hd = this.hash && this.hash.data;
-		this.data = {
-			filename: (ջթ.cofv((hd && hd.filename || filename))),
-			mode: (ջթ.cofv((hd && hd.mode || mode))),
-			source: hd && hd.source ? (ջթ.cofv(hd.source )): (source ? (ջթ.cofv(source)) : ((ջթ.cofv(source))).localStorage("sandbox_source"))
+		this.lastId = ((ջթ.cofv(0))).localStorage("sandbox_id");
+		this.currentId = (ջթ.cofv()).localStorage("storage_curr_id");
+		this.edit = {
+			filename: (ջթ.cofv(true)),
+			mode: (ջթ.cofv(true)),
+			source: (ջթ.cofv(true))
 		};
+		this.data = {
+			filename: (ջթ.cofv("")),
+			mode: (ջթ.cofv("auto-code@logic")),
+			source: (ջթ.cofv(""))
+		};
+		const hd = this.hash && this.hash.data;
+		if(hd) {
+			// data is from hash, do not save to local storage, disallow edit
+			this.edit.filename.value = false;
+			this.edit.mode.value = true;
+			this.edit.source.value = false;
+			this.data = {
+				filename: (ջթ.cofv((hd.filename || ""))),
+				mode: (ջթ.cofv((hd.filename || "auto-code@logic"))),
+				source: (ջթ.cofv(hd.source
+			))};
+		} else if(source) {
+			// data from embedded source, do not save to local storage but allow edit
+			this.data = {
+				filename: (ջթ.cofv(filename)),
+				mode: (ջթ.cofv(mode)),
+				source: (ջթ.cofv(source))
+			};
+		} else {
+			// pure sandbox, load and save from/to storage
+			this.reloadStorage();
+			this.saveStorage();
+		}
 		this.data.editorSource = this.data.source.value;
 		this.result = ջթ.coff(() => Transpiler.transpile({filename: this.data.filename.value, mode: this.data.mode.value, es6: this.es6, sandboxed: true}, this.data.source.value)).async().d(ջլ,  this.data.filename,  this.data.mode,  this.data.source);
 	}
@@ -31,6 +55,19 @@
 		} catch(e) {
 			return false;
 		}
+	}
+
+	reloadStorage() {
+
+	}
+
+	saveStorage() {var ջլ=ջթ.cfa(ջի, arguments, 0);
+		const saver = ջթ.coff(() => JSON.stringify({
+			filename: this.data.filename.value,
+			mode: this.data.mode.value,
+			source: this.data.source.value
+		})).async().d(ջլ,  this.data.filename,  this.data.mode,  this.data.source);
+		saver.$$subscribe(ջլ, value => window.localStorage.setItem("storage__" + this.currentId, value));
 	}
 
 	save() {
@@ -67,22 +104,24 @@
 		window.open("./sandbox#" + btoa(JSON.stringify({data: {filename, source}})));
 	}
 	
-	render() {var ջլ=ջթ.cfa(ջի, arguments, 0);
-		return ջժ(ջլ, [ջժ.create, "div", [[ [0, "data-orientation", this.orientation]]]], [ջժ.body, ջլ => {
-			ջթ.forEachArray(this.hide , (value) => {
+	render({orientation = "x", hide = []}) {var ջլ=ջթ.cfa(ջի, arguments, 1);
+		return ջժ(ջլ, [ջժ.create, "div", [[ [0, "data-orientation", orientation]]]], [ջժ.body, ջլ => {
+			ջթ.forEachArray(hide , (value) => {
 				ջժ(ջլ, [ջժ.update, [[ [5, "class", `hide-${value}`]]]] );
 			});
 			ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "top"]]]], [ջժ.body, ջլ => {
 				ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "actions"]]]], [ջժ.body, ջլ => {
 					ջժ(ջլ, [ջժ.create, "div", []], [ջժ.body, ջլ => {
 						ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "left"]]]], [ջժ.body, ջլ => {
-							ջժ(ջլ, [ջժ.create, "input", [[ [0, "class", "input"], [0, "placeholder", "File Name"], [1, "disabled", this.readonly]]]], [ջժ.bind, ["text", "", ջթ.bo(() => this.data.filename.value, [this.data.filename]), ջխ => {this.data.filename.value=ջխ}]], [ջժ.append] );
+							ջժ(ջլ, [ջժ.create, "input", [[ [0, "class", "input"], [0, "placeholder", "File Name"], [1, "disabled", ջթ.bo(() => !this.edit.filename.value, [this.edit.filename])]]]], [ջժ.bind, ["text", "", ջթ.bo(() => this.data.filename.value, [this.data.filename]), ջխ => {this.data.filename.value=ջխ}]], [ջժ.append] );
 						}], [ջժ.append]);
 						ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "right"]]]], [ջժ.body, ջլ => {
-							ջժ(ջլ, [ջժ.create, "input", [[ [0, "class", "input"], [0, "placeholder", "Mode"], [1, "disabled", this.readonly]]]], [ջժ.bind, ["text", "::change", ջթ.bo(() => this.data.mode.value, [this.data.mode]), ջխ => {this.data.mode.value=ջխ}]], [ջժ.append] );
+							ջժ(ջլ, [ջժ.create, "input", [[ [0, "class", "input"], [0, "placeholder", "Mode"], [1, "disabled", ջթ.bo(() => !this.edit.mode.value, [this.edit.mode])]]]], [ջժ.bind, ["text", "::change", ջթ.bo(() => this.data.mode.value, [this.data.mode]), ջխ => {this.data.mode.value=ջխ}]], [ջժ.append] );
+							ջժ(ջլ, [ջժ.create, "button", [[ [0, "class", "button default"]]]], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.create, "i", [[ [0, "class", "fas fa-cog"]]]], [ջժ.append] );}], [ջժ.append]);
 							if(this.readonly) {
 								ջժ(ջլ, [ջժ.create, "button", [[ [0, "class", "button primary"], [3, "click", (event, target) => {this.editInSandbox()}]]]], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.text, `Edit in Sandbox`]);}], [ջժ.append]);
 							} else {
+								ջժ(ջլ, [ջժ.create, "button", [[ [0, "class", "button default"]]]], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.create, "i", [[ [0, "class", "fas fa-plus"]]]], [ջժ.append] );}], [ջժ.append]);
 								ջժ(ջլ, [ջժ.create, "button", [[ [0, "class", "button primary"], [3, "click", (event, target) => {this.save()}]]]], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.text, `Run`]);}], [ջժ.append]);
 							}
 						}], [ջժ.append]);
@@ -196,14 +235,18 @@
 				
 			
 
-			var ջք=ջթ.select(ջծ, `&.hide-result`); 
-				var ջօ=ջթ.select(ջք, `.bottom`); 
-					var ջֆ=ջթ.select(ջօ, `.frame`); 
-						ջֆ.value(`height`, `100%`);
-						ջֆ.value(`border-bottom-width`, `0`);
+			var ջք=ջթ.select(ջծ, `.CodeMirror`); 
+				ջք.value(`background`, `white !important`);
+			
+
+			var ջօ=ջթ.select(ջծ, `&.hide-result`); 
+				var ջֆ=ջթ.select(ջօ, `.bottom`); 
+					var ջև=ջթ.select(ջֆ, `.frame`); 
+						ջև.value(`height`, `100%`);
+						ջև.value(`border-bottom-width`, `0`);
 					
-					var ջև=ջթ.select(ջօ, `.source`); 
-						ջև.value(`display`, `none`);
+					var ռա=ջթ.select(ջֆ, `.source`); 
+						ռա.value(`display`, `none`);
 					
 				
 			ջժ(ջլ, [ջժ.text, `

@@ -1,5 +1,7 @@
 const SIZE = 128;
-const CELL_SIZE = 2;
+const CELL_SIZE = 3;
+const HEADS = true;
+const REPRODUCTION_THRESOLD = .75;
 
 const colors = [
 	["grey", "#718096", "#CBD5E0"],
@@ -31,22 +33,20 @@ var count = & => *results.reduce((acc, {cells}) => acc + cells, 0);
 var players = [];
 
 for(let i=0; i<colors.length; i++) {
-	players.push({type: i, moves: [[rand(), rand()]]});
+	players.push({type: i, position: [rand(), rand()]});
 }
 
 var canvas, context;
 
 function draw(i, j, type) {
-	context.fillStyle = type == 0 ? "#ffffee" : (type < 10 ? "#333333" : (type < 20 ? colors[type - 10][1] : colors[type - 20][2]));
+	context.fillStyle = type < 10 ? "#eeeeff" : (type < 20 ? colors[type - 10][HEADS ? 1 : 2] : colors[type - 20][2]);
 	context.fillRect(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE);
 }
 
 function tick() {
 	players.forEach(player => {
-		let {type, dead, moves} = player;
-		if(!dead) {
-			let [i, j] = moves[0];
-			let [pi, pj] = moves[1] || []; // previous move, to avoid going back
+		if(!player.dead) {
+			let {type, position: [i, j], prev: [pi, pj] = []} = player;
 			let di, dj;
 			do {
 				[di, dj] = (() => {
@@ -58,26 +58,42 @@ function tick() {
 					}
 				})();
 			} while(di < 0 || di >= SIZE || dj < 0 || dj >= SIZE || (di === pi && dj === pj));
-			moves.unshift([di, dj]);
+			player.prev = player.position;
+			player.position = [di, dj];
 			let cell = rows[di][dj];
 			draw(i, j, rows[i][j] = type + 20);
-			if(cell == 1 && Math.random() > .75) {
-				// trap, player is dead
-				player.dead = true;
-				draw(di, dj, rows[di][dj] = 0);
-			} else {
-				if(cell == 1) {
-					// zombie captured
-					players.push({type, moves: [[di, dj]]});
-				} else if(cell >= 10 && cell < 20) {
-					// change team
-					players.find(({moves: [[mi, mj]]}) => di == mi && dj == mj).type = type;
-				}
-				draw(di, dj, rows[di][dj] = type + 10);
+			if(cell >= 10 && cell < 20 && cell != type + 10) {
+				// kill the other if it has a different type
+				players.find(({position: [mi, mj]}) => di == mi && dj == mj).dead = true;
 			}
+			draw(di, dj, rows[di][dj] = type + 10);
 		}
 	});
-	var scores = {};
+	// filter out dead players
+	players = players.filter(player => !player.dead);
+	// give birth to new cells
+	players.filter(player => !player.infertile).forEach(player => {
+		const {type, position} = player;
+		let total = 0;
+		let owned = 0;
+		let check = (i, j) => {
+			if(i >= 0 && i < SIZE && j >= 0 && j < SIZE) {
+				total++;
+				if(rows[i][j] == type + 20) owned++;
+			}
+		};
+		for(let i=-1; i<2; i++) {
+			for(let j=-1; j<2; j++) {
+				check(position[0] + i, position[1] + j);
+			}
+		}
+		if(owned / total >= REPRODUCTION_THRESOLD) {
+			// give birth to another
+			players.push({type, position});
+			player.infertile = true;
+		}
+	});
+	/*var scores = {};
 	rows.forEach(row => row.forEach(type => {
 		if(type >= 10) {
 			let t = type % 10;
@@ -92,52 +108,23 @@ function tick() {
 		}
 	}));
 	*results = Object.values(scores).sort((a, b) => b.cells - a.cells);
-	if(*results.length > 1) {
+	if(*results.length > 1) {*/
 		setTimeout(tick, 1000 / 60);
-	} else {
-		gtimeout = 9999999999999999999999999999999;
-	}
-}
-
-var gtimeout = Math.pow(2, 15);
-
-function goodieImpl() {
-	let i, j, cell;
-	do {
-		cell = rows[i = rand()][j = rand()];
-	} while(cell != 0 && cell < 20);
-	draw(i, j, rows[i][j] = 1);
-}
-
-function goodie() {
-	goodieImpl();
-	setTimeout(goodie, Math.max(500, gtimeout /= 2));
+	//}
 }
 
 function start() {
 	context = canvas.getContext("2d");
 	context.fillStyle = "#eef";
 	context.fillRect(0, 0, canvas.width, canvas.height);
-	players.forEach(({type, moves: [[i, j]]}) => draw(i, j, *(rows[i][j]) = type + 20));
-	for(let i=0; i<(SIZE*SIZE)/25; i++) {
-		goodieImpl();
-	}
-	goodie();
+	players.forEach(({type, position: [i, j]}) => draw(i, j, rows[i][j] = type + 20));
 	tick();
 }
 
 <style :head>
-	[data-type='0'] < fill: #333;
-	[data-type='1'] < fill: #333;
-	[data-type='2'] < fill: #eef;
 	foreach(colors as [, head, cell], i) {
 		[data-type='1${i}'] < fill, background: ${head};
 		[data-type='2${i}'] < fill, background: ${cell};
-	}
-
-	[data-type='1'] {
-		//border-radius: 50%;
-		//transform: rotate(45deg) scale(${Math.sqrt(2)});
 	}
 	
 	.scores {

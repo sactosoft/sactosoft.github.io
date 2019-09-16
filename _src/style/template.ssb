@@ -40,3 +40,21 @@ body {
 	top: 64px;
 	right, bottom, left: 0;
 }
+
+.toast {
+
+	width: 100%;
+	padding: 8px;
+	background: #fafafc;
+	border-left: 6px solid transparent;
+	border-radius: 1px;
+
+	foreach(colors as type, color) {
+
+		&.${type} {
+			border-color: ${color};
+		}
+
+	}
+
+}

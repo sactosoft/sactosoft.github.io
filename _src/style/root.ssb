@@ -30,6 +30,9 @@ body, button, input, textarea, select {
 
 pre, code {
 	font-family: ${fonts.mono};
+	background: #f4f4f4;
+	padding: 0 3px;
+	border-radius: 2px;
 }
 
 a {

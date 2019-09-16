@@ -3,9 +3,7 @@
 	&:focus {
 		outline: none;
 	}
-	
-	background: transparent;
-	color: white;
+
 	padding: .6em 1.2em;
 	border: none;
 	border-radius: .4rem;
@@ -122,6 +120,8 @@
 	foreach(colors as type, color) {
 
 		&.${type} {
+
+			color: ${@contrast(@darken(color, .5))};
 
 			const c300 = @lighten(color, .25);
 			const c500 = color;

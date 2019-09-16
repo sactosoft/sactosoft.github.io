@@ -1,5 +1,4 @@
-const SIZE = 128;
-const CELL_SIZE = 2;
+const SIZE = 64;
 
 const colors = [
 	["grey", "#718096", "#CBD5E0"],
@@ -20,7 +19,8 @@ var rows = [];
 for(let i=0; i<SIZE; i++) {
 	let row = [];
 	for(let j=0; j<SIZE; j++) {
-		row.push(0);
+		let value = 1 + Math.floor(Math.random() * SIZE);
+		row.push(&Math.min(2, value));
 	}
 	rows.push(row);
 }
@@ -34,12 +34,7 @@ for(let i=0; i<colors.length; i++) {
 	players.push({type: i, moves: [[rand(), rand()]]});
 }
 
-var canvas, context;
-
-function draw(i, j, type) {
-	context.fillStyle = type == 0 ? "#ffffee" : (type < 10 ? "#333333" : (type < 20 ? colors[type - 10][1] : colors[type - 20][2]));
-	context.fillRect(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-}
+players.forEach(({type, moves: [[i, j]]}) => *(rows[i][j]) = type + 20);
 
 function tick() {
 	players.forEach(player => {
@@ -47,7 +42,7 @@ function tick() {
 		if(!dead) {
 			let [i, j] = moves[0];
 			let [pi, pj] = moves[1] || []; // previous move, to avoid going back
-			let di, dj;
+			let di, dj, cell;
 			do {
 				[di, dj] = (() => {
 					switch(Math.floor(Math.random() * 4)) {
@@ -57,30 +52,29 @@ function tick() {
 						case 3: return [i, j + 1];
 					}
 				})();
-			} while(di < 0 || di >= SIZE || dj < 0 || dj >= SIZE || (di === pi && dj === pj));
+			} while(di < 0 || di >= SIZE || dj < 0 || dj >= SIZE || (di === pi && dj === pj) || *(cell = rows[di][dj]) < 1);
 			moves.unshift([di, dj]);
-			let cell = rows[di][dj];
-			draw(i, j, rows[i][j] = type + 20);
-			if(cell == 1 && Math.random() > .75) {
+			*(rows[i][j]) = type + 20;
+			if(*cell == 1 && Math.random() > .75) {
 				// trap, player is dead
 				player.dead = true;
-				draw(di, dj, rows[di][dj] = 0);
+				*cell = 3;
 			} else {
-				if(cell == 1) {
+				if(*cell == 1) {
 					// zombie captured
 					players.push({type, moves: [[di, dj]]});
-				} else if(cell >= 10 && cell < 20) {
+				} else if(*cell >= 10 && *cell < 20) {
 					// change team
 					players.find(({moves: [[mi, mj]]}) => di == mi && dj == mj).type = type;
 				}
-				draw(di, dj, rows[di][dj] = type + 10);
+				*cell = type + 10;
 			}
 		}
 	});
 	var scores = {};
 	rows.forEach(row => row.forEach(type => {
-		if(type >= 10) {
-			let t = type % 10;
+		if(*type >= 10) {
+			let t = *type % 10;
 			if(!scores[t]) scores[t] = {
 				type: t,
 				cells: 0,
@@ -88,7 +82,7 @@ function tick() {
 			};
 			let ref = scores[t];
 			ref.cells++;
-			if(type < 20) ref.heads++;
+			if(*type < 20) ref.heads++;
 		}
 	}));
 	*results = Object.values(scores).sort((a, b) => b.cells - a.cells);
@@ -101,30 +95,17 @@ function tick() {
 
 var gtimeout = Math.pow(2, 15);
 
-function goodieImpl() {
-	let i, j, cell;
-	do {
-		cell = rows[i = rand()][j = rand()];
-	} while(cell != 0 && cell < 20);
-	draw(i, j, rows[i][j] = 1);
-}
-
 function goodie() {
-	goodieImpl();
+	let cell;
+	do {
+		cell = rows[rand()][rand()];
+	} while(*cell < 20);
+	*cell = 1;
 	setTimeout(goodie, Math.max(500, gtimeout /= 2));
 }
 
-function start() {
-	context = canvas.getContext("2d");
-	context.fillStyle = "#eef";
-	context.fillRect(0, 0, canvas.width, canvas.height);
-	players.forEach(({type, moves: [[i, j]]}) => draw(i, j, *(rows[i][j]) = type + 20));
-	for(let i=0; i<(SIZE*SIZE)/25; i++) {
-		goodieImpl();
-	}
-	goodie();
-	tick();
-}
+tick();
+goodie();
 
 <style :head>
 	[data-type='0'] < fill: #333;
@@ -152,7 +133,13 @@ function start() {
 </style>
 
 <:body>
-	<canvas :ref=canvas {width, height}=(SIZE * CELL_SIZE) +documentappend=start />
+	<svg {width, height}=(SIZE * 4)>
+		foreach(rows as row, i) {
+			foreach(row as cell, j) {
+				<rect x=(j * 4) y=(i * 4) {width, height}=4 class="cell" data-type=*cell />
+			}
+		}
+	</svg>
 	<div class="scores">
 		foreach(*results as {type, cells, heads}) {
 			<div data-type=(20 + type) &width=(cells / ^count * 100 + "%")>${colors[type][0]}: ${cells} (${heads})</div>
