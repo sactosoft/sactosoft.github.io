@@ -29,7 +29,14 @@ class Sandbox {
 			if(source) this.data.*source = source;
 		}
 		this.data.editorSource = this.data.*source;
-		this.result = async & => Transpiler.transpile({filename: this.data.*name, mode: this.data.*mode, es6: this.es6, sandboxed: true}, this.data.*source);
+		this.result = async & => {
+			try {
+				return Transpiler.transpile({filename: this.data.*name, mode: this.data.*mode, es6: this.es6, sandboxed: true}, this.data.*source);
+			} catch(error) {
+				console.error(error);
+				return {error};
+			}
+		};
 		// settings
 		this.settings = &false;
 		this.snippets = & => {
@@ -146,7 +153,7 @@ class Sandbox {
 
 	initResultEditor(element) {
 		const editor = this.initCodeMirror(element, true, "javascript");
-		this.result.$$subscribe(value => editor.setValue(value.source.contentOnly));
+		this.result.$$subscribe(value => editor.setValue(value.source && value.source.contentOnly || ""));
 	}
 	
 	render({orientation = "x", hide = [], embedded}) {
@@ -179,6 +186,9 @@ class Sandbox {
 				</div>
 				<div class="editor">
 					<textarea @value=this.data.editorSource +documentappend={{this.initSourceEditor(target)}} />
+					if(this.*result.error) {
+						<div class="error">${this.*result.error.message}</div>
+					}
 				</div>
 			</div>
 			<div class="top settings" ~show=this.*settings>
@@ -221,10 +231,10 @@ class Sandbox {
 			</div>
 			<div class="bottom">
 				<div class="frame">
-					<iframe srcdoc=`${this.data.*head}<script src="${this.runtime}"></script><script>window.onload=function(){${this.*result.source.all}}</script>` />
+					<iframe srcdoc=`${this.data.*head}<script src="${this.runtime}"></script><script>window.onload=function(){${this.*result.source && this.*result.source.all}}</script>` />
 				</div>
 				<div class="source">
-					<textarea @value=this.^result.source.contentOnly +documentappend={{this.initResultEditor(target)}} />
+					<textarea @value=(this.^result.source && this.^result.source.contentOnly || "") +documentappend={{this.initResultEditor(target)}} />
 				</div>
 			</div>
 		</div>
@@ -297,6 +307,15 @@ class Sandbox {
 					top: 64px;
 					bottom: 0;
 					border-top: 2px solid transparent;
+					.error {
+						position: absolute;
+						bottom, left, right: 0;
+						padding: 16px;
+						background: #e74c3c;
+						color: white;
+						font-family: Consolas, monospace;
+						z-index: 3;
+					}
 				}
 				&.settings {
 					table {

@@ -29,7 +29,14 @@
 			if(source) this.data.source.value = source;
 		}
 		this.data.editorSource = this.data.source.value;
-		this.result = ջթ.coff(() => Transpiler.transpile({filename: this.data.name.value, mode: this.data.mode.value, es6: this.es6, sandboxed: true}, this.data.source.value)).async().d(ջլ,  this.data.name,  this.data.mode,  this.data.source);
+		this.result = ջթ.coff(() => {
+			try {
+				return Transpiler.transpile({filename: this.data.name.value, mode: this.data.mode.value, es6: this.es6, sandboxed: true}, this.data.source.value);
+			} catch(error) {
+				console.error(error);
+				return {error};
+			}
+		}).async().d(ջլ,  this.data.name,  this.data.mode,  this.data.source);
 		// settings
 		this.settings = (ջթ.cofv(false));
 		this.snippets = ջթ.coff(() => {
@@ -146,7 +153,7 @@
 
 	initResultEditor(element) {var ջլ=ջթ.cfa(ջի, arguments, 1);
 		const editor = this.initCodeMirror(element, true, "javascript");
-		this.result.$$subscribe(ջլ, value => editor.setValue(value.source.contentOnly));
+		this.result.$$subscribe(ջլ, value => editor.setValue(value.source && value.source.contentOnly || ""));
 	}
 	
 	render({orientation = "x", hide = [], embedded}) {var ջլ=ջթ.cfa(ջի, arguments, 1);
@@ -178,7 +185,10 @@
 					}], [ջժ.append]);
 				}], [ջժ.append]);
 				ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "editor"]]]], [ջժ.body, ջլ => {
-					ջժ(ջլ, [ջժ.create, "textarea", [[ [1, "value", this.data.editorSource], [3, "documentappend", (event, target) => {this.initSourceEditor(target)}]]]], [ջժ.append] );
+					ջժ(ջլ, [ջժ.create, "textarea", [[ [1, "value", this.data.editorSource], [3, "documentappend", (event, target) => {this.initSourceEditor(target)}]]]], [ջժ.append] );ջթ.bindIfElse(ջլ, [[() => (this.result.value.error), [this.result]]], ջլ =>
+					 {
+						ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "error"]]]], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.text, ջթ.bo(() => `${this.result.value.error.message}`, [this.result])]);}], [ջժ.append]);
+					});
 				}], [ջժ.append]);
 			}], [ջժ.append]);
 			ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "top settings"], [5, "show", ջթ.bo(() => this.settings.value, [this.settings])]]]], [ջժ.body, ջլ => {
@@ -221,10 +231,10 @@
 			}], [ջժ.append]);
 			ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "bottom"]]]], [ջժ.body, ջլ => {
 				ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "frame"]]]], [ջժ.body, ջլ => {
-					ջժ(ջլ, [ջժ.create, "iframe", [[ [0, "srcdoc", ջթ.bo(() => `${this.data.head.value}<script src="${this.runtime}"></script><script>window.onload=function(){${this.result.value.source.all}}</script>`, [this.data.head, this.result])]]]], [ջժ.append] );
+					ջժ(ջլ, [ջժ.create, "iframe", [[ [0, "srcdoc", ջթ.bo(() => `${this.data.head.value}<script src="${this.runtime}"></script><script>window.onload=function(){${this.result.value.source && this.result.value.source.all}}</script>`, [this.data.head, this.result,  this.result])]]]], [ջժ.append] );
 				}], [ջժ.append]);
 				ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "source"]]]], [ջժ.body, ջլ => {
-					ջժ(ջլ, [ջժ.create, "textarea", [[ [1, "value", this.result.value.source.contentOnly], [3, "documentappend", (event, target) => {this.initResultEditor(target)}]]]], [ջժ.append] );
+					ջժ(ջլ, [ջժ.create, "textarea", [[ [1, "value", (this.result.value.source && this.result.value.source.contentOnly || "")], [3, "documentappend", (event, target) => {this.initResultEditor(target)}]]]], [ջժ.append] );
 				}], [ջժ.append]);
 			}], [ջժ.append]);
 		}], [ջժ.append])
@@ -297,57 +307,66 @@
 					ջտ.value(`top`, `64px`);
 					ջտ.value(`bottom`, `0`);
 					ջտ.value(`border-top`, `2px solid transparent`);
+					var ջր=ջթ.select(ջտ, `.error`); 
+						ջր.value(`position`, `absolute`);
+						ջր.value(`bottom, left, right`, `0`);
+						ջր.value(`padding`, `16px`);
+						ջր.value(`background`, `#e74c3c`);
+						ջր.value(`color`, `white`);
+						ջր.value(`font-family`, `Consolas, monospace`);
+						ջր.value(`z-index`, `3`);
+					
 				
-				var ջր=ջթ.select(ջչ, `&.settings`); 
-					var ջց=ջթ.select(ջր, `table`); 
-						ջց.value(`width`, `100%`);
-						ջց.value(`border-collapse`, `collapse`);
-						var ջւ=ջթ.select(ջց, `td`); 
-							ջւ.value(`padding`, `4px 8px`);
-							ջւ.value(`border-top`, `1px solid #ddd`);
+				var ջց=ջթ.select(ջչ, `&.settings`); 
+					var ջւ=ջթ.select(ջց, `table`); 
+						ջւ.value(`width`, `100%`);
+						ջւ.value(`border-collapse`, `collapse`);
+						var ջփ=ջթ.select(ջւ, `td`); 
+							ջփ.value(`padding`, `4px 8px`);
+							ջփ.value(`border-top`, `1px solid #ddd`);
 						
-						var ջփ=ջթ.select(ջց, `tr td:nth-child(2), tr td:nth-child(3)`); 
-							ջփ.value(`text-align`, `center`);
+						var ջք=ջթ.select(ջւ, `tr td:nth-child(2), tr td:nth-child(3)`); 
+							ջք.value(`text-align`, `center`);
 						
 					
 				
 			
 
-			var ջք=ջթ.select(ջկ, `.bottom`); 
-				var ջօ=ջթ.select(ջք, `.frame, .source`); 
-					ջօ.value(`position`, `absolute`);
-					ջօ.value(`height`, `50%`);
-					ջօ.value(`left, right`, `0`);
+			var ջօ=ջթ.select(ջկ, `.bottom`); 
+				var ջֆ=ջթ.select(ջօ, `.frame, .source`); 
+					ջֆ.value(`position`, `absolute`);
+					ջֆ.value(`height`, `50%`);
+					ջֆ.value(`left, right`, `0`);
 				
-				var ջֆ=ջթ.select(ջք, `.frame`); 
-					ջֆ.value(`width`, `100%`);
-					ջֆ.value(`top`, `0`);
-					ջֆ.value(`border-bottom`, `2px solid transparent`);
-					var ջև=ջթ.select(ջֆ, `iframe`); 
-						ջև.value(`width, height`, `100%`);
-						ջև.value(`margin`, `0`);
-						ջև.value(`border`, `0`);
-						ջև.value(`background`, `white`);
+				var ջև=ջթ.select(ջօ, `.frame`); 
+					ջև.value(`width`, `100%`);
+					ջև.value(`top`, `0`);
+					ջև.value(`border-bottom`, `2px solid transparent`);
+					var ռա=ջթ.select(ջև, `iframe`); 
+						ռա.value(`width, height`, `100%`);
+						ռա.value(`margin`, `0`);
+						ռա.value(`border`, `0`);
+						ռա.value(`background`, `white`);
 					
 				
-				var ռա=ջթ.select(ջք, `.source`); 
-					ռա.value(`bottom`, `0`);
-					ռա.value(`border-top`, `2px solid transparent`);
+				var ռբ=ջթ.select(ջօ, `.source`); 
+					ռբ.value(`bottom`, `0`);
+					ռբ.value(`border-top`, `2px solid transparent`);
 				
 			
 
-			var ռբ=ջթ.select(ջկ, `.CodeMirror`); 
-				ռբ.value(`background`, `white !important`);
+			var ռգ=ջթ.select(ջկ, `.CodeMirror`); 
+				ռգ.value(`background`, `white !important`);
 			
 
-			var ռգ=ջթ.select(ջկ, `&.hide-result`); 
-				var ռդ=ջթ.select(ռգ, `.bottom`); 
-					var ռե=ջթ.select(ռդ, `.frame`); 
-						ռե.value(`height`, `100%`);
-						ռե.value(`border-bottom-width`, `0`);
+			var ռդ=ջթ.select(ջկ, `&.hide-result`); 
+				var ռե=ջթ.select(ռդ, `.bottom`); 
+					var ռզ=ջթ.select(ռե, `.frame`); 
+						ռզ.value(`height`, `100%`);
+						ռզ.value(`border-bottom-width`, `0`);
 					
-					var ռզ=ջթ.select(ռդ, `.source`); 
-						ռզ.value(`display`, `none`);
+					var ռէ=ջթ.select(ռե, `.source`); 
+						ռէ.value(`display`, `none`);
 					
 				
 			ջժ(ջլ, [ջժ.text, `
