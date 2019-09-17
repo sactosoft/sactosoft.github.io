@@ -35,7 +35,7 @@ module.exports = class {
 				</div>
 			</div>
 			<div class="sandbox">
-				<#app $name="Sandbox" $src=`${root}dist/sandbox.js` $args.readonly $args.source="<:body>\n\tClick an <b>example</b> to start!\n</:body>\n" />
+				<#app $name="Sandbox" $src=`${root}dist/sandbox.js` $args.readonly $args.embedded $args.hide=["result"] $args.source="<:body>\n\tClick an <b>example</b> to start!\n</:body>\n" />
 			</div>
 		</div>
 	}

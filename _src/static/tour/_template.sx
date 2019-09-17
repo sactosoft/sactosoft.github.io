@@ -29,6 +29,7 @@ module.exports = class {
 					max-width: 768px;
 					background: white;
 					padding: 16px;
+					overflow-y: auto;
 				}
 
 				.sandbox {
@@ -44,8 +45,8 @@ module.exports = class {
 			</div>
 			<div class="sandbox">
 				<#app $name="Sandbox" $src=`${root}dist/sandbox.js`
-					$args.filename=`${section}/${sub}.sx` $args.root=`${root}dist/`
-					$args.orientation="y" $args.hide=["result"]
+					$args.orientation="y" $args.hide=["result"] $args.embedded
+					$args.filename=`${section}/${sub}.sx`
 					$args.source=fs.readFileSync(`./_src/guide/${section}/${sub}.sx`, "utf8") />
 			</div>
 		</div>

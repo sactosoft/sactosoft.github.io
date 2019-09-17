@@ -1,0 +1,357 @@
+class Sandbox {
+
+	constructor({readonly, embedded, name, mode, source}) {
+		this.es6 = this.checkES6();
+		this.runtime = document.getElementById("sactory").src;
+		this.lastId = (&0).localStorage("sandbox_id");
+		this.currentId = (&0).localStorage("sandbox_curr_id");
+		this.readonly = &!!readonly;
+		this.data = {
+			name: &"",
+			description: &"",
+			mode: &"auto-code@logic",
+			head: &"",
+			source: &""
+		};
+		const hash = window.location.hash && JSON.parse(atob(window.location.hash.substr(1)));
+		if(hash) {
+			// data is from hash, do not save to local storage, disallow edit
+			this.*readonly = true;
+			if(hash.name) this.data.*name = hash.name;
+			if(hash.mode) this.data.*mode = hash.mode;
+			if(hash.source) this.data.*source = hash.source;
+		} else if(!embedded) {
+			this.reloadStorage();
+			this.saveStorage();
+		} else {
+			if(name) this.data.*name = name;
+			if(mode) this.data.*mode = mode;
+			if(source) this.data.*source = source;
+		}
+		this.data.editorSource = this.data.*source;
+		this.result = async & => Transpiler.transpile({filename: this.data.*name, mode: this.data.*mode, es6: this.es6, sandboxed: true}, this.data.*source);
+		// settings
+		this.settings = &false;
+		this.snippets = & => {
+			if(this.*settings) {
+				let ret = [];
+				for(let id=0; id<=this.^lastId; id++) {
+					const stored = window.localStorage.getItem("sandbox__" + id);
+					if(stored) {
+						ret.push(Object.assign(JSON.parse(stored), {id}));
+					}
+				}
+				return ret.sort((a, b) => b.modified - a.modified);
+			} else {
+				// not showing settings, do not bother to calculate
+				return [];
+			}
+		};
+	}
+
+	checkES6() {
+		try {
+			eval("() => {}");
+			return true;
+		} catch(e) {
+			return false;
+		}
+	}
+
+	reloadStorageImpl(id) {
+		const storage = window.localStorage.getItem("sandbox__" + id);
+		if(storage) {
+			const data = JSON.parse(storage);
+			this.data.*name = data.name;
+			this.data.*description = data.description;
+			this.data.*mode = data.mode;
+			this.data.*head = data.head;
+			this.data.*source = data.source;
+		}
+	}
+
+	reloadStorage() {
+		this.reloadStorageImpl(this.*currentId);
+	}
+
+	saveStorage() {
+		if(!this.saving) {
+			const saver = async & => JSON.stringify({
+				name: this.data.*name,
+				description: this.data.*description,
+				mode: this.data.*mode,
+				head: this.data.*head,
+				source: this.data.*source,
+				modified: new Date().getTime()
+			});
+			saver.$$subscribe(value => window.localStorage.setItem("sandbox__" + this.*currentId, value));
+			this.saving = true;
+		}
+	}
+
+	plus() {
+		// create new snippet
+		this.*currentId = ++this.*lastId;
+		if(this.*readonly) {
+			// remove read-only limitation and init storage
+			this.*readonly = false;
+			this.saveStorage();
+		} else {
+			this.data.*name = "";
+			this.data.*description = "";
+			this.data.*mode = "auto-code@logic";
+			this.data.*head = "";
+			this.data.*source = "";
+		}
+	}
+
+	open() {
+		const { name, mode, source } = this.data;
+		window.open(this.runtime.slice(0, -19) + "sandbox#" + btoa(JSON.stringify({name, mode, source})));
+	}
+
+	load(id) {
+		this.*settings = false;
+		this.*readonly = false;
+		this.reloadStorageImpl(this.*currentId = id);
+	}
+
+	save() {
+		this.data.source.update(this.data.editorSource, 8934);
+	}
+
+	initCodeMirror(element, readOnly, mode) {
+		const editor = CodeMirror.fromTextArea(element, {
+			lineNumbers: true,
+			indentWithTabs: true,
+			smartIndent: false,
+			lineWrapping: true,
+			theme: "sactory",
+			readOnly, mode
+		});
+		editor.setSize("100%", "100%");
+		return editor;
+	}
+
+	initSourceEditor(element) {
+		const editor = this.initCodeMirror(element, this.*readonly, "jsx");
+		editor.on("change", () => this.data.editorSource = editor.getValue());
+		this.data.source.$$subscribe(value => editor.setValue(value), 8934);
+		<:use (element.nextElementSibling) +[[save]]:prevent={{this.save()}} />
+		if(this.*readonly) {
+			//TODO remove readOnly option
+			this.readonly.$$subscribe(() => editor.setOption("readOnly", false));
+		}
+	}
+
+	initResultEditor(element) {
+		const editor = this.initCodeMirror(element, true, "javascript");
+		this.result.$$subscribe(value => editor.setValue(value.source.contentOnly));
+	}
+	
+	render({orientation = "x", hide = [], embedded}) {
+		return <div data-orientation=orientation>
+			foreach(hide as value) {
+				<:element ~class=`hide-${value}` />
+			}
+			<div class="top" ~show=!this.*settings>
+				<div class="actions">
+					<div>
+						<div class="left">
+							<input class="input" placeholder="Name" @disabled=this.*readonly *value::change=this.data.*name />
+						</div>
+						<div class="right">
+							<div class="buttons">
+								if(!embedded) {
+									<button class="button default" +click={{this.*settings=true}}><i class="fas fa-cog" /></button>
+									<button class="button default" +click={{this.plus()}}><i class="fas fa-plus" /></button>
+									if(!this.*readonly) {
+										<button class="button primary" +click={{this.open()}}><i class="fas fa-share" /></button>
+									}
+								}
+								<button class="button primary" +click={{this.save()}}><i class="fas fa-play" /></button>
+								if(embedded) {
+									<button class="button default" +click={{this.open()}}><i class="fas fa-external-link-alt" /></button>
+								}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="editor">
+					<textarea @value=this.data.editorSource +documentappend={{this.initSourceEditor(target)}} />
+				</div>
+			</div>
+			<div class="top settings" ~show=this.*settings>
+				<div &height="100%" &background="white" &padding="16px" &overflow-y="auto">
+					<div &float="right">
+						<button class="button danger" +click={{this.*settings=false}}><i class="fas fa-times" /></button>
+					</div>
+					<h3>Settings</h3>
+					<:inherit &width="100%" @disabled=this.*readonly :whitelist="input" :whitelist="textarea">
+						<h4>Description</h4>
+						<textarea class="input" *value::change=this.data.*description />
+						<h4>Mode</h4>
+						<input class="input" placeholder="Mode" *value::change=this.data.*mode />
+						<h4>Header</h4>
+						<textarea class="input font-mono" placeholder="e.g. <script src=\"example.js\"></script>" rows=6 *value::change=this.data.*head />
+					</:inherit>
+					<h4>Saved snippets</h4>
+					<table>
+						<tr>
+							<th>Name</th>
+							<th width=1>Size</th>
+							<th width=1>Modified</th>
+							<th width=1 />
+						</tr>
+						foreach(this.*snippets as {id, name, source, modified}) {
+							<tr>
+								<td>${name}</td>
+								<td>${source.length}</td>
+								<td class="nowrap">${new Date(modified).toLocaleString()}</td>
+								<td>
+									<div class="buttons">
+										<button class="button primary" +click={{this.load(id)}}><i class="fas fa-play" /></button>
+										<!//<button class="button danger"><i class="fas fa-trash" /></button>
+									</div>
+								</td>
+							</tr>
+						}
+					</table>
+				</div>
+			</div>
+			<div class="bottom">
+				<div class="frame">
+					<iframe srcdoc=`${this.data.*head}<script src="${this.runtime}"></script><script>window.onload=function(){${this.*result.source.all}}</script>` />
+				</div>
+				<div class="source">
+					<textarea @value=this.^result.source.contentOnly +documentappend={{this.initResultEditor(target)}} />
+				</div>
+			</div>
+		</div>
+	}
+
+	static style() {
+		return <style>
+			position: absolute;
+			top, bottom, left, right: 0;
+
+			.top, .bottom {
+				position: absolute;
+			}
+
+			&[data-orientation='x'] {
+				.top, .bottom {
+					top, bottom: 0;
+					width: 50%;
+				}
+				.top {
+					left: 0;
+					border-right: 2px solid transparent;
+				}
+				.bottom {
+					right: 0;
+					border-left: 2px solid transparent;
+				}
+			}
+
+			&[data-orientation='y'] {
+				.top, .bottom {
+					left, right: 0;
+					height: 50%;
+				}
+				.top {
+					top: 0;
+					border-bottom: 2px solid transparent;
+				}
+				.bottom {
+					bottom: 0;
+					border-top: 2px solid transparent;
+				}
+			}
+
+			.top {
+				.actions, .editor {
+					position: absolute;
+					left, right: 0;
+				}
+				.actions {
+					top: 0;
+					height: 64px;
+					border-bottom: 2px solid transparent;
+					& > div {
+						background: white;
+						height: 100%;
+						padding: 0 12px;
+						display: flex;
+						justify-content: space-between;
+						.left, .right {
+							display: flex;
+							align-items: center;
+							& > * + * {
+								margin-left: 12px;
+							}
+						}
+					}
+				}
+				.editor {
+					top: 64px;
+					bottom: 0;
+					border-top: 2px solid transparent;
+				}
+				&.settings {
+					table {
+						width: 100%;
+						border-collapse: collapse;
+						td {
+							padding: 4px 8px;
+							border-top: 1px solid #ddd;
+						}
+						tr td:nth-child(2), tr td:nth-child(3) {
+							text-align: center;
+						}
+					}
+				}
+			}
+
+			.bottom {
+				.frame, .source {
+					position: absolute;
+					height: 50%;
+					left, right: 0;
+				}
+				.frame {
+					width: 100%;
+					top: 0;
+					border-bottom: 2px solid transparent;
+					iframe {
+						width, height: 100%;
+						margin: 0;
+						border: 0;
+						background: white;
+					}
+				}
+				.source {
+					bottom: 0;
+					border-top: 2px solid transparent;
+				}
+			}
+
+			.CodeMirror {
+				background: white !important;
+			}
+
+			&.hide-result {
+				.bottom {
+					.frame {
+						height: 100%;
+						border-bottom-width: 0;
+					}
+					.source {
+						display: none;
+					}
+				}
+			}
+		</style>
+	}
+
+};

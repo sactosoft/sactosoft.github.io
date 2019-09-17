@@ -16,6 +16,8 @@ module.exports = class {
 				<link rel="stylesheet" href=`${this.root}css/theme.css` />
 				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css" />
 				<script src="./versions.js" />
+				<script async src="https://www.googletagmanager.com/gtag/js?id=UA-148167806-1" />
+				<script>!function(){var dataLayer=window.dataLayer||[];dataLayer.push("js",new Date());dataLayer.push("config","UA-148167806-1");}()</script>
 			</:head>
 			<:body &color="#333">
 				<div class="header">

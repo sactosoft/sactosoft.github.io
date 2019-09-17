@@ -2,6 +2,11 @@ body {
 	background: linear-gradient(135deg, #9400d3, #7000a0);
 }
 
+hr {
+	height: 1px;
+	background: #fafafc;
+}
+
 .header {
 
 	margin: 0 auto;
