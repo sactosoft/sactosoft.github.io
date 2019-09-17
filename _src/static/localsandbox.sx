@@ -1,0 +1,13 @@
+const sandboxImports = require("./sandbox-imports");
+
+module.exports = class {
+	
+	render({version}) {
+		<:head>
+			<title>Sandbox (Local) — Sactory v${version}</title>
+			<[sandboxImports] $root="../factory/" />
+		</:head>
+		return <#app $name="Sandbox" $src="./dist/sandbox.js" />
+	}
+
+};

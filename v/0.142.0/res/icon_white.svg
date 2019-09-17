@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
-	<polygon id="left" fill="#fff" points="500,0 109,188 13,611 283,950 717,950 987,611 891,188" />
-	<polygon id="right" fill="#eee" points="695.5,94 283,950 717,950 987,611 891,188" />
-</svg>

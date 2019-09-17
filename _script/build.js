@@ -99,7 +99,7 @@ fs.readdirSync(sactoryDist).forEach(filename => {
 });
 
 // compile css
-require("../../sactify/src/build")("./_src/style", "./css");
+//require("../../sactify/src/build")("./_src/style", "./css");
 
 // copy resources
 ncp("./_src/res", "./res");

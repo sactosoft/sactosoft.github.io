@@ -1,4 +1,4 @@
-/*! Transpiled from ./_src/dist/sandbox.sx using Sactory v0.142.0. Do not edit manually. */var ջթ=Sactory;var ջժ=ջթ.chain;var ջի={};const SIZE = 128;
+/*! Transpiled from ./_src/dist/_sandbox.sx using Sactory v0.142.0. Do not edit manually. */var ղն=Sactory;var ղշ=ղն.chain;var ղո={};const SIZE = 128;
 const CELL_SIZE = 2;
 
 const colors = [
@@ -25,8 +25,8 @@ for(let i=0; i<SIZE; i++) {
 	rows.push(row);
 }
 
-var results = (ջթ.cofv([]));
-var count = ջթ.coff(() => results.value.reduce((acc, {cells}) => acc + cells, 0)).d(ջի, results);
+var results = (ղն.cofv([]));
+var count = ղն.coff(() => results.value.reduce((acc, {cells}) => acc + cells, 0)).d(ղո, results);
 
 var players = [];
 
@@ -126,36 +126,36 @@ function start() {
 	tick();
 }
 
-ջժ(ջի, [ջժ.create, "style", [[ /*head=true*/]]], [ջժ.body, ջի => {ջթ.cabs(ջի, (ջխ, $) => {var ջծ=ջթ.root();
-	var ջկ=ջթ.select(ջծ, `[data-type='0']`);  ջկ.value(`fill`, `#333`);
-	var ջհ=ջթ.select(ջծ, `[data-type='1']`);  ջհ.value(`fill`, `#333`);
-	var ջձ=ջթ.select(ջծ, `[data-type='2']`);  ջձ.value(`fill`, `#eef`);
-	ջթ.forEachArray(colors , ([, head, cell], i) => {
-		var ջղ=ջթ.select(ջծ, `[data-type='1${i}']`);  ջղ.value(`fill, background`, `${head}`);
-		var ջճ=ջթ.select(ջծ, `[data-type='2${i}']`);  ջճ.value(`fill, background`, `${cell}`);
+ղշ(ղո, [ղշ.create, "style", [[ /*head=true*/]]], [ղշ.body, ղո => {ղն.cabs(ղո, (ղպ, $) => {var ղջ=ղն.root();
+	var ղռ=ղն.select(ղջ, `[data-type='0']`);  ղռ.value(`fill`, `#333`);
+	var ղս=ղն.select(ղջ, `[data-type='1']`);  ղս.value(`fill`, `#333`);
+	var ղվ=ղն.select(ղջ, `[data-type='2']`);  ղվ.value(`fill`, `#eef`);
+	ղն.forEachArray(colors , ([, head, cell], i) => {
+		var ղտ=ղն.select(ղջ, `[data-type='1${i}']`);  ղտ.value(`fill, background`, `${head}`);
+		var ղր=ղն.select(ղջ, `[data-type='2${i}']`);  ղր.value(`fill, background`, `${cell}`);
 	});
 
-	var ջմ=ջթ.select(ջծ, `[data-type='1']`); 
-		ջմ.value(`//border-radius`, `50%`);
-		ջմ.value(`//transform`, `rotate(45deg) scale(${Math.sqrt(2)})`);
+	var ղց=ղն.select(ղջ, `[data-type='1']`); 
+		ղց.value(`//border-radius`, `50%`);
+		ղց.value(`//transform`, `rotate(45deg) scale(${Math.sqrt(2)})`);
 	
 	
-	var ջյ=ջթ.select(ջծ, `.scores`); 
-		ջյ.value(`color`, `white`);
-		ջյ.value(`font-family`, `Helvetica, monospace`);
-		ջյ.value(`white-space`, `nowrap`);
-		ջյ.value(`text-shadow`, `0 0 4px rgba(0, 0, 0, .5)`);
-		var ջն=ջթ.select(ջյ, `div`); 
-			ջն.value(`padding`, `2px 4px`);
+	var ղւ=ղն.select(ղջ, `.scores`); 
+		ղւ.value(`color`, `white`);
+		ղւ.value(`font-family`, `Helvetica, monospace`);
+		ղւ.value(`white-space`, `nowrap`);
+		ղւ.value(`text-shadow`, `0 0 4px rgba(0, 0, 0, .5)`);
+		var ղփ=ղն.select(ղւ, `div`); 
+			ղփ.value(`padding`, `2px 4px`);
 		
-	ջժ(ջի, [ջժ.text, `
-`]);return ջծ.content}, [], [])}], [ջժ.appendTo, ջթ.head(ջի)]);
+	ղշ(ղո, [ղշ.text, `
+`]);return ղջ.content}, [], [])}], [ղշ.appendTo, ղն.head(ղո)]);
 
-ջժ(ջի, [ջժ.use, ջթ.body(ջի)], [ջժ.body, ջի => {
-	ջժ(ջի, [ջժ.create, "canvas", [[ /*ref=canvas*/, [3, "documentappend", start]],[[0, "", Array("width" , "height"), "",(SIZE * CELL_SIZE)]]]], [ջժ.ref, ջխ => canvas=ջխ], [ջժ.append] );
-	ջժ(ջի, [ջժ.create, "div", [[ [0, "class", "scores"]]]], [ջժ.body, ջի => {
-		ջթ.bindEach(ջի, results, () => results.value , (ջի, {type, cells, heads}) => {
-			ջժ(ջի, [ջժ.create, "div", [[ [0, "data-type", (20 + type)], [2, "width", (cells / count.value * 100 + "%")]]]], [ջժ.body, ջի => {}], [ջժ.append]);
+ղշ(ղո, [ղշ.use, ղն.body(ղո)], [ղշ.body, ղո => {
+	ղշ(ղո, [ղշ.create, "canvas", [[ /*ref=canvas*/, [3, "documentappend", start]],[[0, "", Array("width" , "height"), "",(SIZE * CELL_SIZE)]]]], [ղշ.ref, ղպ => canvas=ղպ], [ղշ.append] );
+	ղշ(ղո, [ղշ.create, "div", [[ [0, "class", "scores"]]]], [ղշ.body, ղո => {
+		ղն.bindEach(ղո, results, () => results.value , (ղո, {type, cells, heads}) => {
+			ղշ(ղո, [ղշ.create, "div", [[ [0, "data-type", (20 + type)], [2, "width", (cells / count.value * 100 + "%")]]]], [ղշ.body, ղո => {ղշ(ղո, [ղշ.text, `${colors[type][0]}: ${cells} (${heads})`]);}], [ղշ.append]);
 		});
-	}], [ջժ.append]);
+	}], [ղշ.append]);
 }]);
