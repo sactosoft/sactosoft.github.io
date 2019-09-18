@@ -3,17 +3,17 @@ const RIGHT = 2;
 const DOWN = 3;
 const LEFT = 4;
 
-var score = &0;
-var speed = 500;
+let score = &0;
+let speed = 500;
 
-var data = [];
-var positions = [];
-var direction = RIGHT;
-var next;
+let data = [];
+let positions = [];
+let direction = RIGHT;
+let next;
 
-for(var i=0; i<30; i++) {
-	var row = [];
-	for(var j=0; j<30; j++) {
+for(let i=0; i<30; i++) {
+	let row = [];
+	for(let j=0; j<30; j++) {
 		row.push(&0);
 	}
 	data.push(row);
@@ -26,8 +26,8 @@ document.$$on("keydown:key.arrowdown:prevent", () => next = DOWN);
 document.$$on("keydown:key.arrowleft:prevent", () => next = LEFT);
 
 function fruit() {
-	var row = data[Math.floor(Math.random() * data.length)];
-	var cell = row[Math.floor(Math.random() * row.length)];
+	let row = data[Math.floor(Math.random() * data.length)];
+	let cell = row[Math.floor(Math.random() * row.length)];
 	if(*cell == 0) {
 		*cell = 2 + Math.floor(Math.random() * 3);
 	} else {
@@ -36,7 +36,7 @@ function fruit() {
 }
 
 function tick() {
-	var [i, j] = positions[0];
+	let [i, j] = positions[0];
 	if(next && Math.abs(direction - next) != 2) direction = next;
 	switch(direction) {
 		case UP:
@@ -52,13 +52,13 @@ function tick() {
 			j--;
 			break;
 	}
-	var row = data[i];
+	let row = data[i];
 	if(row) {
-		var cell = row[j];
+		let cell = row[j];
 		if(cell) {
 			if(*cell != 1) {
 				if(*cell == 0) {
-					var [pi, pj] = positions.pop();
+					let [pi, pj] = positions.pop();
 					*(data[pi][pj]) = 0;
 				} else {
 					fruit();

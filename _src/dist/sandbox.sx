@@ -144,6 +144,7 @@ class Sandbox {
 		const editor = CodeMirror.fromTextArea(element, {
 			lineNumbers: true,
 			indentWithTabs: true,
+			tabSize: 4,
 			smartIndent: false,
 			lineWrapping: true,
 			theme: "sactory",
@@ -201,7 +202,17 @@ class Sandbox {
 				<div class="editor">
 					<textarea @value=this.data.editorSource +documentappend={{this.initSourceEditor(target)}} />
 					if(this.*result.error) {
-						<div class="error">${this.*result.error.message}</div>
+						<div class="error">${this.*result.error.message.trim()}</div>
+					}
+					if(this.*result.warnings && this.*result.warnings.length) {
+						<div class="warning">
+							foreach(this.*result.warnings.slice(0, 3) as {message, position: {line, column}}) {
+								<div>Line ${line + 1}, Column ${column}: ${message}</div>
+							}
+							if(this.*result.warnings.length > 3) {
+								<div>${this.*result.warnings.length - 3} more...</div>
+							}
+						</div>
 					}
 				</div>
 			</div>
@@ -321,14 +332,23 @@ class Sandbox {
 					top: 64px;
 					bottom: 0;
 					border-top: 2px solid transparent;
-					.error {
+					.error, .warning {
 						position: absolute;
 						bottom, left, right: 0;
-						padding: 16px;
-						background: #e74c3c;
+						padding: 12px;
 						color: white;
 						font-family: Consolas, monospace;
+						white-space: pre-wrap;
 						z-index: 4;
+					}
+					.error {
+						background: #e74c3c;
+					}
+					.warning {
+						background: #ffcd02;
+						& > * + * {
+							margin-top: 12px;
+						}
 					}
 				}
 				&.settings {

@@ -80,11 +80,11 @@ const examples = {
 		}
 	},
 
-	"todo": {
-		title: "TODO",
+	"todomvc": {
+		title: "TodoMVC",
 		render() {
 			return <#document-fragment>
-				<p>A simple TODO application.</p>
+
 			</#document-fragment>
 		}
 	}

@@ -1,15 +1,15 @@
-var pressed = &false;
+let pressed = &false;
 
 document.$$on("mousedown", () => *pressed = true);
 document.$$on("mouseup", () => *pressed = false);
 
-var id, timeout = &33;
-var rows = [];
+let id, timeout = &33;
+let rows = [];
 
 // init cell states to `false`
-for(var i=0; i<128; i++) {
-	var row = [];
-	for(var j=0; j<128; j++) {
+for(let i=0; i<128; i++) {
+	let row = [];
+	for(let j=0; j<128; j++) {
 		row.push(&false);
 	}
 	rows.push(row);
@@ -21,13 +21,13 @@ function fill() {
 }
 
 function start() {
-	var newRows = [];
+	let newRows = [];
 	rows.forEach((row, i) => {
-		var newRow = [];
+		let newRow = [];
 		row.forEach((cell, j) => {
-			var value = *cell;
-			var count = 0;
-			var get = row => {
+			let value = *cell;
+			let count = 0;
+			let get = row => {
 				if(j > 0 && *(row[j - 1])) count++;
 				if(*(row[j])) count++;
 				if(j < row.length - 1 && *(row[j + 1])) count++;

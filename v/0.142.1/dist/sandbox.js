@@ -144,6 +144,7 @@
 		const editor = CodeMirror.fromTextArea(element, {
 			lineNumbers: true,
 			indentWithTabs: true,
+			tabSize: 4,
 			smartIndent: false,
 			lineWrapping: true,
 			theme: "sactory",
@@ -201,7 +202,17 @@
 				ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "editor"]]]], [ջժ.body, ջլ => {
 					ջժ(ջլ, [ջժ.create, "textarea", [[ [1, "value", this.data.editorSource], [3, "documentappend", (event, target) => {this.initSourceEditor(target)}]]]], [ջժ.append] );ջթ.bindIfElse(ջլ, [[() => (this.result.value.error), [this.result]]], ջլ =>
 					 {
-						ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "error"]]]], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.text, ջթ.bo(() => `${this.result.value.error.message}`, [this.result])]);}], [ջժ.append]);
+						ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "error"]]]], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.text, ջթ.bo(() => `${this.result.value.error.message.trim()}`, [this.result])]);}], [ջժ.append]);
+					});ջթ.bindIfElse(ջլ, [[() => (this.result.value.warnings && this.result.value.warnings.length), [this.result, this.result]]], ջլ =>
+					 {
+						ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "warning"]]]], [ջժ.body, ջլ => {
+							ջթ.bindEach(ջլ, this.result, () => this.result.value.warnings.slice(0, 3) , (ջլ, {message, position: {line, column}}) => {
+								ջժ(ջլ, [ջժ.create, "div", []], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.text, `Line ${line + 1}, Column ${column}: ${message}`]);}], [ջժ.append]);
+							});ջթ.bindIfElse(ջլ, [[() => (this.result.value.warnings.length > 3), [this.result]]], ջլ =>
+							 {
+								ջժ(ջլ, [ջժ.create, "div", []], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.text, ջթ.bo(() => `${this.result.value.warnings.length - 3} more...`, [this.result])]);}], [ջժ.append]);
+							});
+						}], [ջժ.append]);
 					});
 				}], [ջժ.append]);
 			}], [ջժ.append]);
@@ -321,66 +332,75 @@
 					ջտ.value(`top`, `64px`);
 					ջտ.value(`bottom`, `0`);
 					ջտ.value(`border-top`, `2px solid transparent`);
-					var ջր=ջթ.select(ջտ, `.error`); 
+					var ջր=ջթ.select(ջտ, `.error, .warning`); 
 						ջր.value(`position`, `absolute`);
 						ջր.value(`bottom, left, right`, `0`);
-						ջր.value(`padding`, `16px`);
-						ջր.value(`background`, `#e74c3c`);
+						ջր.value(`padding`, `12px`);
 						ջր.value(`color`, `white`);
 						ջր.value(`font-family`, `Consolas, monospace`);
+						ջր.value(`white-space`, `pre-wrap`);
 						ջր.value(`z-index`, `4`);
 					
-				
-				var ջց=ջթ.select(ջչ, `&.settings`); 
-					var ջւ=ջթ.select(ջց, `table`); 
-						ջւ.value(`width`, `100%`);
-						ջւ.value(`border-collapse`, `collapse`);
-						var ջփ=ջթ.select(ջւ, `td`); 
-							ջփ.value(`padding`, `4px 8px`);
-							ջփ.value(`border-top`, `1px solid #ddd`);
-						
-						var ջք=ջթ.select(ջւ, `tr td:nth-child(2), tr td:nth-child(3)`); 
-							ջք.value(`text-align`, `center`);
+					var ջց=ջթ.select(ջտ, `.error`); 
+						ջց.value(`background`, `#e74c3c`);
+					
+					var ջւ=ջթ.select(ջտ, `.warning`); 
+						ջւ.value(`background`, `#ffcd02`);
+						var ջփ=ջթ.select(ջւ, `& > * + *`); 
+							ջփ.value(`margin-top`, `12px`);
 						
 					
 				
-			
-
-			var ջօ=ջթ.select(ջկ, `.bottom`); 
-				var ջֆ=ջթ.select(ջօ, `.frame, .source`); 
-					ջֆ.value(`position`, `absolute`);
-					ջֆ.value(`height`, `50%`);
-					ջֆ.value(`left, right`, `0`);
-				
-				var ջև=ջթ.select(ջօ, `.frame`); 
-					ջև.value(`width`, `100%`);
-					ջև.value(`top`, `0`);
-					ջև.value(`border-bottom`, `2px solid transparent`);
-					var ռա=ջթ.select(ջև, `iframe`); 
-						ռա.value(`width, height`, `100%`);
-						ռա.value(`margin`, `0`);
-						ռա.value(`border`, `0`);
-						ռա.value(`background`, `white`);
+				var ջք=ջթ.select(ջչ, `&.settings`); 
+					var ջօ=ջթ.select(ջք, `table`); 
+						ջօ.value(`width`, `100%`);
+						ջօ.value(`border-collapse`, `collapse`);
+						var ջֆ=ջթ.select(ջօ, `td`); 
+							ջֆ.value(`padding`, `4px 8px`);
+							ջֆ.value(`border-top`, `1px solid #ddd`);
+						
+						var ջև=ջթ.select(ջօ, `tr td:nth-child(2), tr td:nth-child(3)`); 
+							ջև.value(`text-align`, `center`);
+						
 					
 				
-				var ռբ=ջթ.select(ջօ, `.source`); 
-					ռբ.value(`bottom`, `0`);
-					ռբ.value(`border-top`, `2px solid transparent`);
+			
+
+			var ռա=ջթ.select(ջկ, `.bottom`); 
+				var ռբ=ջթ.select(ռա, `.frame, .source`); 
+					ռբ.value(`position`, `absolute`);
+					ռբ.value(`height`, `50%`);
+					ռբ.value(`left, right`, `0`);
+				
+				var ռգ=ջթ.select(ռա, `.frame`); 
+					ռգ.value(`width`, `100%`);
+					ռգ.value(`top`, `0`);
+					ռգ.value(`border-bottom`, `2px solid transparent`);
+					var ռդ=ջթ.select(ռգ, `iframe`); 
+						ռդ.value(`width, height`, `100%`);
+						ռդ.value(`margin`, `0`);
+						ռդ.value(`border`, `0`);
+						ռդ.value(`background`, `white`);
+					
+				
+				var ռե=ջթ.select(ռա, `.source`); 
+					ռե.value(`bottom`, `0`);
+					ռե.value(`border-top`, `2px solid transparent`);
 				
 			
 
-			var ռգ=ջթ.select(ջկ, `.CodeMirror`); 
-				ռգ.value(`background`, `white !important`);
+			var ռզ=ջթ.select(ջկ, `.CodeMirror`); 
+				ռզ.value(`background`, `white !important`);
 			
 
-			var ռդ=ջթ.select(ջկ, `&.hide-result`); 
-				var ռե=ջթ.select(ռդ, `.bottom`); 
-					var ռզ=ջթ.select(ռե, `.frame`); 
-						ռզ.value(`height`, `100%`);
-						ռզ.value(`border-bottom-width`, `0`);
+			var ռէ=ջթ.select(ջկ, `&.hide-result`); 
+				var ռը=ջթ.select(ռէ, `.bottom`); 
+					var ռթ=ջթ.select(ռը, `.frame`); 
+						ռթ.value(`height`, `100%`);
+						ռթ.value(`border-bottom-width`, `0`);
 					
-					var ռէ=ջթ.select(ռե, `.source`); 
-						ռէ.value(`display`, `none`);
+					var ռժ=ջթ.select(ռը, `.source`); 
+						ռժ.value(`display`, `none`);
 					
 				
 			ջժ(ջլ, [ջժ.text, `

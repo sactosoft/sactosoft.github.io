@@ -1,10 +1,10 @@
 !function(a){
 	if(typeof module != "undefined" && module.exports) {
-		module.exports = a(data => Buffer.from(data, "base64").toString(), data => Buffer.from(data).toString("base64"));
+		module.exports = a(data => Buffer.from(data, "base64").toString(), data => Buffer.from(data.buffer).toString("base64"));
 	} else {
-		Object.assign(window, a(atob, btoa));
+		Object.assign(window, a(atob, data => btoa(data.toString())));
 	}
-}(function(atob, btoa){
+}(function(decodeBase64, encodeBase64){
 
 	class Writer {
 
@@ -55,7 +55,7 @@
 
 		readString() {
 			const length = this.readInt();
-			return new TextDecoder().decode(this.buffer.slice(this.index, this.index += length));
+			return new TextDecoder("utf-8").decode(this.buffer.slice(this.index, this.index += length));
 		}
 
 	}
@@ -69,12 +69,12 @@
 				writer.writeString(key);
 				writer.writeString(data[key]);
 			}
-			return btoa(writer.toString());
+			return encodeBase64(writer);
 		},
 
 		decode(data) {
 			const ret = {};
-			const reader = new Reader(atob(data));
+			const reader = new Reader(decodeBase64(data));
 			let length = reader.readInt();
 			while(length-- > 0) {
 				ret[reader.readString()] = reader.readString();
