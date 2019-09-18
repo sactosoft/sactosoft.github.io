@@ -16,6 +16,21 @@ const sections = [
 
 const nop = () => {};
 
+// prepare dist
+try {
+	fs.mkdirSync("./_dist");
+} catch(e) {}
+
+// prepare v
+try {
+	fs.mkdirSync("./v");
+} catch(e) {}
+
+// prepare v/${version}
+try {
+	fs.mkdirSync("./v/" + version);
+} catch(e) {}
+
 // create array with supported versions
 const versions = fs.readdirSync("v");
 if(versions.indexOf(version) == -1) {
@@ -27,16 +42,6 @@ versions.sort((a, b) => {
 		.reduce((acc, value) => acc + value, 0);
 	return num(b) - num(a);
 });
-
-// prepare dist
-try {
-	fs.mkdirSync("./_dist");
-} catch(e) {}
-
-// prepare v/${version}
-try {
-	fs.mkdirSync("./v/" + version);
-} catch(e) {}
 
 const writeImpl = (file, content) => mkdirp(file.substring(0, file.lastIndexOf("/")), () => fs.writeFile(file, content, nop));
 
@@ -69,11 +74,17 @@ const static = (folder, parents) => {
 		if(stat.isDirectory()) {
 			static(folder + fname + "/", parents);
 		} else if(stat.isFile()) {
-			if(fname != "_template.sx") {
+			let attrs = {
+				version, root, sections,
+				path: folder.substr(base.length) + fname.slice(0, -3)
+			};
+			if(fname.endsWith(".blank.sx")) {
+				const widget = get(fname.slice(0, -3));
+				write(folder.substr(base.length) + fname.slice(0, -8) + "html", new widget().render(attrs).render());
+			} else if(fname != "_template.sx") {
 				const widget = get(fname.slice(0, -3));
 				write(folder.substr(base.length) + fname.slice(0, -2) + "html", new parents[0]({
-					version, root, sections,
-					path: folder.substr(base.length) + fname.slice(0, -3),
+					...attrs,
 					children: parents.slice(1).concat(widget)
 				}).render().render());
 			}
@@ -85,9 +96,12 @@ static(base, []);
 // compile scripts
 fs.readdirSync("./_src/dist").forEach(fname => {
 	const filename = "./_src/dist/" + fname;
-	const data = transpile({filename, mode, es6: true}, fs.readFileSync(filename, "utf8")).source.all;
+	let source = fs.readFileSync(filename, "utf8");
+	if(fname.endsWith(".sx")) {
+		source = transpile({filename, mode, es6: true}, source).source.all;
+	}
 	//TODO use babel to transpile to es5
-	write("dist/" + fname.slice(0, -2) + "js", data);
+	write("dist/" + fname.slice(0, -2) + "js", source);
 });
 
 // copy files from sactory's dist folder
@@ -99,7 +113,7 @@ fs.readdirSync(sactoryDist).forEach(filename => {
 });
 
 // compile css
-require("../../sactify/src/build")("./_src/style", "./css");
+//require("../../sactify/src/build")("./_src/style", "./css");
 
 // copy resources
 ncp("./_src/res", "./res");

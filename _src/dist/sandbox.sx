@@ -13,12 +13,13 @@ class Sandbox {
 			head: &"",
 			source: &""
 		};
-		const hash = window.location.hash && JSON.parse(atob(window.location.hash.substr(1)));
+		const hash = window.location.hash && decode(window.location.hash.substr(1));
 		if(hash) {
 			// data is from hash, do not save to local storage, disallow edit
 			this.*readonly = true;
 			if(hash.name) this.data.*name = hash.name;
 			if(hash.mode) this.data.*mode = hash.mode;
+			if(hash.head) this.data.*head = hash.head;
 			if(hash.source) this.data.*source = hash.source;
 		} else if(!embedded) {
 			this.reloadStorage();
@@ -37,6 +38,8 @@ class Sandbox {
 				return {error};
 			}
 		};
+		// source
+		this.srcdoc = & => `${this.data.*head}<script src="${this.runtime}"></script><script>Sactory.ready(function(){${this.*result.source && this.*result.source.all}})</script>`;
 		// settings
 		this.settings = &false;
 		this.snippets = & => {
@@ -112,9 +115,19 @@ class Sandbox {
 		}
 	}
 
+	openImpl(type, data) {
+		window.open(`${this.runtime.slice(0, -19)}${type}#${encode(data)}`);
+	}
+
 	open() {
-		const { name, mode, source } = this.data;
-		window.open(this.runtime.slice(0, -19) + "sandbox#" + btoa(JSON.stringify({name, mode, source})));
+		this.openImpl("sandbox", this.data);
+	}
+
+	fullscreen() {
+		this.openImpl("fullscreen", {
+			name: this.data.*name,
+			srcdoc: this.*srcdoc
+		});
 	}
 
 	load(id) {
@@ -177,6 +190,7 @@ class Sandbox {
 									}
 								}
 								<button class="button primary" +click={{this.save()}}><i class="fas fa-play" /></button>
+								<button class="button primary" +click={{this.fullscreen()}}><i class="fas fa-expand" /></button>
 								if(embedded) {
 									<button class="button default" +click={{this.open()}}><i class="fas fa-external-link-alt" /></button>
 								}
@@ -231,7 +245,7 @@ class Sandbox {
 			</div>
 			<div class="bottom">
 				<div class="frame">
-					<iframe srcdoc=`${this.data.*head}<script src="${this.runtime}"></script><script>window.onload=function(){${this.*result.source && this.*result.source.all}}</script>` />
+					<iframe srcdoc=this.*srcdoc />
 				</div>
 				<div class="source">
 					<textarea @value=(this.^result.source && this.^result.source.contentOnly || "") +documentappend={{this.initResultEditor(target)}} />
@@ -314,7 +328,7 @@ class Sandbox {
 						background: #e74c3c;
 						color: white;
 						font-family: Consolas, monospace;
-						z-index: 3;
+						z-index: 4;
 					}
 				}
 				&.settings {

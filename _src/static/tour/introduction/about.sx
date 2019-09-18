@@ -5,7 +5,7 @@ module.exports = class {
 		return <#document-fragment>
 			<p>
 				Sactory is a <strong>library</strong> \for creating
-				and manipulating XML-like documents, like <strong>HTML</strong> and SVG.
+				and manipulating XML-like documents, such as <strong>HTML</strong> and SVG.
 			</p>
 			<p>
 				It provides a transpiler that converts <code>.sy</code> and <code>.sx</code>
@@ -14,7 +14,7 @@ module.exports = class {
 			</p>
 			<h3>About this ${type}</h3>
 			<p>
-				This ${type} will guide through the various features of Sactory, from installation
+				This ${type} will guide you through the various features of Sactory, from installation
 				and syntax to API and advanced usage.<br />
 				For every section an embedded sandbox with related code is available
 				to play with. The sandbox allows you to write Sactory code and immeditely see the

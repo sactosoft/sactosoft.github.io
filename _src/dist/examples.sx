@@ -6,7 +6,7 @@ window.addEventListener("load", () => {
 		const request = new XMLHttpRequest();
 		request.onload = () => {
 			container.textContent = "";
-			<[Sandbox] :parent=container $readonly $embedded $hide=["result"] $filename=example.slice(0, -3) $source=request.response />
+			<[Sandbox] :parent=container $readonly $embedded $hide=["result"] $name=example.slice(0, -3) $source=request.response />
 		};
 		request.open("GET", "./res/examples/" + example);
 		request.send();

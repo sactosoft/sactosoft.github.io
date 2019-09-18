@@ -1,0 +1,28 @@
+module.exports = class {
+
+	render({root, version}) {
+		return <#document>
+			<:head>
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
+				<link rel="icon" type="image/png" href=`${root}res/icon.png` />
+				<script src=`${root}dist/hash.js` />
+				<script>
+					window.onload = function(){
+						var data = decode(window.location.hash.substr(1));
+						document.title = (data.name || "???") + " — Sactory v" + #{version};
+						var iframe = document.createElement("iframe");
+						iframe.style.position = "fixed";
+						iframe.style.top = iframe.style.left = 0;
+						iframe.style.width = "100%";
+						iframe.style.height = "100vh";
+						iframe.style.border = "none";
+						iframe.srcdoc = data.srcdoc;
+						document.body.appendChild(iframe);
+					};
+				</script>
+			</:head>
+			<:body &margin="0" />
+		</#document>
+	}
+
+};

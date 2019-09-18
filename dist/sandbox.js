@@ -13,12 +13,13 @@
 			head: (ջթ.cofv("")),
 			source: (ջթ.cofv(""))
 		};
-		const hash = window.location.hash && JSON.parse(atob(window.location.hash.substr(1)));
+		const hash = window.location.hash && decode(window.location.hash.substr(1));
 		if(hash) {
 			// data is from hash, do not save to local storage, disallow edit
 			this.readonly.value = true;
 			if(hash.name) this.data.name.value = hash.name;
 			if(hash.mode) this.data.mode.value = hash.mode;
+			if(hash.head) this.data.head.value = hash.head;
 			if(hash.source) this.data.source.value = hash.source;
 		} else if(!embedded) {
 			this.reloadStorage();
@@ -37,6 +38,8 @@
 				return {error};
 			}
 		}).async().d(ջլ,  this.data.name,  this.data.mode,  this.data.source);
+		// source
+		this.srcdoc = ջթ.coff(() => `${this.data.head.value}<script src="${this.runtime}"></script><script>Sactory.ready(function(){${this.result.value.source && this.result.value.source.all}})</script>`).d(ջլ, this.data.head, this.result,  this.result);
 		// settings
 		this.settings = (ջթ.cofv(false));
 		this.snippets = ջթ.coff(() => {
@@ -112,9 +115,19 @@
 		}
 	}
 
+	openImpl(type, data) {
+		window.open(`${this.runtime.slice(0, -19)}${type}#${encode(data)}`);
+	}
+
 	open() {
-		const { name, mode, source } = this.data;
-		window.open(this.runtime.slice(0, -19) + "sandbox#" + btoa(JSON.stringify({name, mode, source})));
+		this.openImpl("sandbox", this.data);
+	}
+
+	fullscreen() {
+		this.openImpl("fullscreen", {
+			name: this.data.name.value,
+			srcdoc: this.srcdoc.value
+		});
 	}
 
 	load(id) {
@@ -177,6 +190,7 @@
 									});
 								}
 								ջժ(ջլ, [ջժ.create, "button", [[ [0, "class", "button primary"], [3, "click", (event, target) => {this.save()}]]]], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.create, "i", [[ [0, "class", "fas fa-play"]]]], [ջժ.append] );}], [ջժ.append]);
+								ջժ(ջլ, [ջժ.create, "button", [[ [0, "class", "button primary"], [3, "click", (event, target) => {this.fullscreen()}]]]], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.create, "i", [[ [0, "class", "fas fa-expand"]]]], [ջժ.append] );}], [ջժ.append]);
 								if(embedded) {
 									ջժ(ջլ, [ջժ.create, "button", [[ [0, "class", "button default"], [3, "click", (event, target) => {this.open()}]]]], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.create, "i", [[ [0, "class", "fas fa-external-link-alt"]]]], [ջժ.append] );}], [ջժ.append]);
 								}
@@ -231,7 +245,7 @@
 			}], [ջժ.append]);
 			ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "bottom"]]]], [ջժ.body, ջլ => {
 				ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "frame"]]]], [ջժ.body, ջլ => {
-					ջժ(ջլ, [ջժ.create, "iframe", [[ [0, "srcdoc", ջթ.bo(() => `${this.data.head.value}<script src="${this.runtime}"></script><script>window.onload=function(){${this.result.value.source && this.result.value.source.all}}</script>`, [this.data.head, this.result,  this.result])]]]], [ջժ.append] );
+					ջժ(ջլ, [ջժ.create, "iframe", [[ [0, "srcdoc", ջթ.bo(() => this.srcdoc.value, [this.srcdoc])]]]], [ջժ.append] );
 				}], [ջժ.append]);
 				ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "source"]]]], [ջժ.body, ջլ => {
 					ջժ(ջլ, [ջժ.create, "textarea", [[ [1, "value", (this.result.value.source && this.result.value.source.contentOnly || "")], [3, "documentappend", (event, target) => {this.initResultEditor(target)}]]]], [ջժ.append] );
@@ -314,7 +328,7 @@
 						ջր.value(`background`, `#e74c3c`);
 						ջր.value(`color`, `white`);
 						ջր.value(`font-family`, `Consolas, monospace`);
-						ջր.value(`z-index`, `3`);
+						ջր.value(`z-index`, `4`);
 					
 				
 				var ջց=ջթ.select(ջչ, `&.settings`); 

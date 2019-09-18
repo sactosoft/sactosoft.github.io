@@ -6,7 +6,7 @@
 		const request = new XMLHttpRequest();
 		request.onload = () => {
 			container.textContent = "";
-			լէ(լը, [լէ.create, Sandbox,  /*parent=container*/[[ [4, "readonly", true], [4, "embedded", true], [4, "hide", ["result"]], [4, "filename", example.slice(0, -3)], [4, "source", request.response]]], "Sandbox"], [լէ.appendTo, container] )
+			լէ(լը, [լէ.create, Sandbox,  /*parent=container*/[[ [4, "readonly", true], [4, "embedded", true], [4, "hide", ["result"]], [4, "name", example.slice(0, -3)], [4, "source", request.response]]], "Sandbox"], [լէ.appendTo, container] )
 		};
 		request.open("GET", "./res/examples/" + example);
 		request.send();
