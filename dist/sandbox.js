@@ -1,4 +1,19 @@
-/*! Transpiled from ./_src/dist/sandbox.sx using Sactory v0.142.1. Do not edit manually. */var ջթ=Sactory;var ջժ=ջթ.chain;var ջի={};class Sandbox {
+/*! Transpiled from ./_src/dist/sandbox.sx using Sactory v0.142.2. Do not edit manually. */var ջթ=Sactory;var ջժ=ջթ.chain;var ջի={};Sactory.addWidget("message", function(message){var ջլ=ջթ.cfa(ջի, arguments, 1);
+	return ջժ(ջլ, [ջժ.create, "span", []], [ջժ.body, ջլ => {
+		ջթ.bind(ջլ, [message], [], (ջլ, ջխ) => {var [message]=ջխ.map(ջթ.value);
+			const match = message.matchAll(/`[^`]*`/g);
+			let curr, index = 0;
+			while(!(curr = match.next()).done) {
+				ջժ(ջլ, [ջժ.create, "f", [[ [5, "text", message.substring(index, index = curr.value.index)]]]], [ջժ.append] );
+				ջժ(ջլ, [ջժ.create, "code", [[ [5, "text", curr.value[0].slice(1, -1)]]]], [ջժ.append] );
+				index += curr.value[0].length;
+			}
+			ջժ(ջլ, [ջժ.update, [[ [5, "text", message.substr(index)]]]] );
+		});
+	}], [ջժ.append])
+});
+
+class Sandbox {
 
 	constructor({readonly, embedded, name, mode, source}) {var ջլ=ջթ.cfa(ջի, arguments, 1);
 		this.es6 = this.checkES6();
@@ -136,6 +151,13 @@
 		this.reloadStorageImpl(this.currentId.value = id);
 	}
 
+	remove(name, id) {
+		if(window.confirm(`Are you sure you want to delete "${name}"? This action cannot be undone.`)) {
+			delete window.localStorage["sandbox__" + id];
+			this.snippets._calc();
+		}
+	}
+
 	save() {
 		this.data.source.update(this.data.editorSource, 8934);
 	}
@@ -189,22 +211,24 @@
 									 {
 										ջժ(ջլ, [ջժ.create, "button", [[ [0, "class", "button primary"], [3, "click", (event, target) => {this.open()}]]]], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.create, "i", [[ [0, "class", "fas fa-share"]]]], [ջժ.append] );}], [ջժ.append]);
 									});
-								}
-								ջժ(ջլ, [ջժ.create, "button", [[ [0, "class", "button primary"], [3, "click", (event, target) => {this.save()}]]]], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.create, "i", [[ [0, "class", "fas fa-play"]]]], [ջժ.append] );}], [ջժ.append]);
+										}
+										ջժ(ջլ, [ջժ.create, "button", [[ [0, "class", "button primary"], [3, "click", (event, target) => {this.save()}]]]], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.create, "i", [[ [0, "class", "fas fa-play"]]]], [ջժ.append] );}], [ջժ.append]);
 								ջժ(ջլ, [ջժ.create, "button", [[ [0, "class", "button primary"], [3, "click", (event, target) => {this.fullscreen()}]]]], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.create, "i", [[ [0, "class", "fas fa-expand"]]]], [ջժ.append] );}], [ջժ.append]);
 								if(embedded) {
 									ջժ(ջլ, [ջժ.create, "button", [[ [0, "class", "button default"], [3, "click", (event, target) => {this.open()}]]]], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.create, "i", [[ [0, "class", "fas fa-external-link-alt"]]]], [ջժ.append] );}], [ջժ.append]);
 								}
-							}], [ջժ.append]);
+									}], [ջժ.append]);
 						}], [ջժ.append]);
 					}], [ջժ.append]);
 				}], [ջժ.append]);
 				ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "editor"]]]], [ջժ.body, ջլ => {
 					ջժ(ջլ, [ջժ.create, "textarea", [[ [1, "value", this.data.editorSource], [3, "documentappend", (event, target) => {this.initSourceEditor(target)}]]]], [ջժ.append] );ջթ.bindIfElse(ջլ, [[() => (this.result.value.error), [this.result]]], ջլ =>
 					 {
-						ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "error"]]]], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.text, ջթ.bo(() => `${this.result.value.error.message.trim()}`, [this.result])]);}], [ջժ.append]);
+						ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "error"]]]], [ջժ.body, ջլ => {
+							ջժ(ջլ, [ջժ.create, "message", [[ [4, "", ջթ.bo(() => this.result.value.error.message.trim(), [this.result])]]]], [ջժ.append] );
+						}], [ջժ.append]);
 					});ջթ.bindIfElse(ջլ, [[() => (this.result.value.warnings && this.result.value.warnings.length), [this.result, this.result]]], ջլ =>
-					 {
+							 {
 						ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "warning"]]]], [ջժ.body, ջլ => {
 							ջթ.bindEach(ջլ, this.result, () => this.result.value.warnings.slice(0, 3) , (ջլ, {message, position: {line, column}}) => {
 								ջժ(ջլ, [ջժ.create, "div", []], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.text, `Line ${line + 1}, Column ${column}: ${message}`]);}], [ջժ.append]);
@@ -212,9 +236,9 @@
 							 {
 								ջժ(ջլ, [ջժ.create, "div", []], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.text, ջթ.bo(() => `${this.result.value.warnings.length - 3} more...`, [this.result])]);}], [ջժ.append]);
 							});
-						}], [ջժ.append]);
+								}], [ջժ.append]);
 					});
-				}], [ջժ.append]);
+						}], [ջժ.append]);
 			}], [ջժ.append]);
 			ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "top settings"], [5, "show", ջթ.bo(() => this.settings.value, [this.settings])]]]], [ջժ.body, ջլ => {
 				ջժ(ջլ, [ջժ.create, "div", [[ [2, "height", "100%"], [2, "background", "white"], [2, "padding", "16px"], [2, "overflow-y", "auto"]]]], [ջժ.body, ջլ => {
@@ -246,7 +270,7 @@
 								ջժ(ջլ, [ջժ.create, "td", []], [ջժ.body, ջլ => {
 									ջժ(ջլ, [ջժ.create, "div", [[ [0, "class", "buttons"]]]], [ջժ.body, ջլ => {
 										ջժ(ջլ, [ջժ.create, "button", [[ [0, "class", "button primary"], [3, "click", (event, target) => {this.load(id)}]]]], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.create, "i", [[ [0, "class", "fas fa-play"]]]], [ջժ.append] );}], [ջժ.append]);
-										//<button class="button danger"><i class="fas fa-trash" /></button>
+										ջժ(ջլ, [ջժ.create, "button", [[ [0, "class", "button danger"], [3, "click", (event, target) => {this.remove(name, id)}]]]], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.create, "i", [[ [0, "class", "fas fa-trash"]]]], [ջժ.append] );}], [ջժ.append]);
 									}], [ջժ.append]);
 								}], [ջժ.append]);
 							}], [ջժ.append]);
@@ -340,67 +364,75 @@
 						ջր.value(`font-family`, `Consolas, monospace`);
 						ջր.value(`white-space`, `pre-wrap`);
 						ջր.value(`z-index`, `4`);
+						var ջց=ջթ.select(ջր, `code`); 
+							ջց.value(`background`, `rgba(255, 255, 255, .125)`);
+						
 					
-					var ջց=ջթ.select(ջտ, `.error`); 
-						ջց.value(`background`, `#e74c3c`);
+					var ջւ=ջթ.select(ջտ, `.error`); 
+						ջւ.value(`background`, `#e74c3c`);
 					
-					var ջւ=ջթ.select(ջտ, `.warning`); 
-						ջւ.value(`background`, `#ffcd02`);
-						var ջփ=ջթ.select(ջւ, `& > * + *`); 
-							ջփ.value(`margin-top`, `12px`);
+					var ջփ=ջթ.select(ջտ, `.warning`); 
+						ջփ.value(`background`, `#ffcd02`);
+						var ջք=ջթ.select(ջփ, `& > * + *`); 
+							ջք.value(`margin-top`, `12px`);
 						
 					
 				
-				var ջք=ջթ.select(ջչ, `&.settings`); 
-					var ջօ=ջթ.select(ջք, `table`); 
-						ջօ.value(`width`, `100%`);
-						ջօ.value(`border-collapse`, `collapse`);
-						var ջֆ=ջթ.select(ջօ, `td`); 
-							ջֆ.value(`padding`, `4px 8px`);
-							ջֆ.value(`border-top`, `1px solid #ddd`);
+				var ջօ=ջթ.select(ջչ, `&.settings`); 
+					var ջֆ=ջթ.select(ջօ, `table`); 
+						ջֆ.value(`width`, `100%`);
+						ջֆ.value(`border-collapse`, `collapse`);
+						var ջև=ջթ.select(ջֆ, `th, td`); 
+							ջև.value(`padding`, `4px 8px`);
 						
-						var ջև=ջթ.select(ջօ, `tr td:nth-child(2), tr td:nth-child(3)`); 
-							ջև.value(`text-align`, `center`);
+						var ռա=ջթ.select(ջֆ, `td`); 
+							ռա.value(`border-top`, `1px solid #ddd`);
+						
+						var ռբ=ջթ.select(ջֆ, `tr th:first-child`); 
+							ռբ.value(`text-align`, `left`);
+						
+						var ռգ=ջթ.select(ջֆ, `tr td:nth-child(2), tr td:nth-child(3)`); 
+							ռգ.value(`text-align`, `center`);
 						
 					
 				
 			
 
-			var ռա=ջթ.select(ջկ, `.bottom`); 
-				var ռբ=ջթ.select(ռա, `.frame, .source`); 
-					ռբ.value(`position`, `absolute`);
-					ռբ.value(`height`, `50%`);
-					ռբ.value(`left, right`, `0`);
+			var ռդ=ջթ.select(ջկ, `.bottom`); 
+				var ռե=ջթ.select(ռդ, `.frame, .source`); 
+					ռե.value(`position`, `absolute`);
+					ռե.value(`height`, `50%`);
+					ռե.value(`left, right`, `0`);
 				
-				var ռգ=ջթ.select(ռա, `.frame`); 
-					ռգ.value(`width`, `100%`);
-					ռգ.value(`top`, `0`);
-					ռգ.value(`border-bottom`, `2px solid transparent`);
-					var ռդ=ջթ.select(ռգ, `iframe`); 
-						ռդ.value(`width, height`, `100%`);
-						ռդ.value(`margin`, `0`);
-						ռդ.value(`border`, `0`);
-						ռդ.value(`background`, `white`);
+				var ռզ=ջթ.select(ռդ, `.frame`); 
+					ռզ.value(`width`, `100%`);
+					ռզ.value(`top`, `0`);
+					ռզ.value(`border-bottom`, `2px solid transparent`);
+					var ռէ=ջթ.select(ռզ, `iframe`); 
+						ռէ.value(`width, height`, `100%`);
+						ռէ.value(`margin`, `0`);
+						ռէ.value(`border`, `0`);
+						ռէ.value(`background`, `white`);
 					
 				
-				var ռե=ջթ.select(ռա, `.source`); 
-					ռե.value(`bottom`, `0`);
-					ռե.value(`border-top`, `2px solid transparent`);
+				var ռը=ջթ.select(ռդ, `.source`); 
+					ռը.value(`bottom`, `0`);
+					ռը.value(`border-top`, `2px solid transparent`);
 				
 			
 
-			var ռզ=ջթ.select(ջկ, `.CodeMirror`); 
-				ռզ.value(`background`, `white !important`);
+			var ռթ=ջթ.select(ջկ, `.CodeMirror`); 
+				ռթ.value(`background`, `white !important`);
 			
 
-			var ռէ=ջթ.select(ջկ, `&.hide-result`); 
-				var ռը=ջթ.select(ռէ, `.bottom`); 
-					var ռթ=ջթ.select(ռը, `.frame`); 
-						ռթ.value(`height`, `100%`);
-						ռթ.value(`border-bottom-width`, `0`);
+			var ռժ=ջթ.select(ջկ, `&.hide-result`); 
+				var ռի=ջթ.select(ռժ, `.bottom`); 
+					var ռլ=ջթ.select(ռի, `.frame`); 
+						ռլ.value(`height`, `100%`);
+						ռլ.value(`border-bottom-width`, `0`);
 					
-					var ռժ=ջթ.select(ռը, `.source`); 
-						ռժ.value(`display`, `none`);
+					var ռխ=ջթ.select(ռի, `.source`); 
+						ռխ.value(`display`, `none`);
 					
 				
 			ջժ(ջլ, [ջժ.text, `

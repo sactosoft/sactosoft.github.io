@@ -4,7 +4,7 @@ body {
 
 hr {
 	height: 1px;
-	background: #fafafc;
+	background: #ddd;
 }
 
 .header {

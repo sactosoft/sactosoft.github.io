@@ -4,7 +4,7 @@ module.exports = class {
 		const type = guide ? "guide" : "tour";
 		return <#document-fragment>
 			<p>
-				Sactory is a <strong>library</strong> \for creating
+				Sactory is a <strong>library</strong> for creating
 				and manipulating XML-like documents, such as <strong>HTML</strong> and SVG.
 			</p>
 			<p>

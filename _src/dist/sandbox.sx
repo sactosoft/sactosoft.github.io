@@ -1,3 +1,18 @@
+Sactory.addWidget("message", function(message){
+	return <span>
+		<:bind :to=message :as=message :mode="code">
+			const match = message.matchAll(/`[^`]*`/g);
+			let curr, index = 0;
+			while(!(curr = match.next()).done) {
+				<f ~text=message.substring(index, index = curr.value.index) />
+				<code ~text=curr.value[0].slice(1, -1) />
+				index += curr.value[0].length;
+			}
+			<:element ~text=message.substr(index) />
+		</:bind>
+	</span>
+});
+
 class Sandbox {
 
 	constructor({readonly, embedded, name, mode, source}) {
@@ -136,6 +151,13 @@ class Sandbox {
 		this.reloadStorageImpl(this.*currentId = id);
 	}
 
+	remove(name, id) {
+		if(window.confirm(`Are you sure you want to delete "${name}"? This action cannot be undone.`)) {
+			delete window.localStorage["sandbox__" + id];
+			this.snippets._calc();
+		}
+	}
+
 	save() {
 		this.data.source.update(this.data.editorSource, 8934);
 	}
@@ -202,7 +224,9 @@ class Sandbox {
 				<div class="editor">
 					<textarea @value=this.data.editorSource +documentappend={{this.initSourceEditor(target)}} />
 					if(this.*result.error) {
-						<div class="error">${this.*result.error.message.trim()}</div>
+						<div class="error">
+							<message $=this.*result.error.message.trim() />
+						</div>
 					}
 					if(this.*result.warnings && this.*result.warnings.length) {
 						<div class="warning">
@@ -246,7 +270,7 @@ class Sandbox {
 								<td>
 									<div class="buttons">
 										<button class="button primary" +click={{this.load(id)}}><i class="fas fa-play" /></button>
-										<!//<button class="button danger"><i class="fas fa-trash" /></button>
+										<button class="button danger" +click={{this.remove(name, id)}}><i class="fas fa-trash" /></button>
 									</div>
 								</td>
 							</tr>
@@ -340,6 +364,9 @@ class Sandbox {
 						font-family: Consolas, monospace;
 						white-space: pre-wrap;
 						z-index: 4;
+						code {
+							background: rgba(255, 255, 255, .125);
+						}
 					}
 					.error {
 						background: #e74c3c;
@@ -355,9 +382,14 @@ class Sandbox {
 					table {
 						width: 100%;
 						border-collapse: collapse;
-						td {
+						th, td {
 							padding: 4px 8px;
+						}
+						td {
 							border-top: 1px solid #ddd;
+						}
+						tr th:first-child {
+							text-align: left;
 						}
 						tr td:nth-child(2), tr td:nth-child(3) {
 							text-align: center;
