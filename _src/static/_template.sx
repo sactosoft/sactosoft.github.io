@@ -33,7 +33,9 @@ module.exports = class {
 						<a href=`${this.root}guide/${this.sections[0][0]}`>Guide</a>
 						<a href=`${this.root}api`>API</a>
 						<a href=`${this.root}examples`>Examples</a>
-						<a href="https://github.com/sactory/sactory" target="_blank">GitHub</a>
+						<a href="https://github.com/sactory" target="_blank" title="GitHub">
+							<i class="fab fa-github" &font-size="1.25em" &vertical-align="middle" />
+						</a>
 					</div>
 				</div>
 				<div class="content">

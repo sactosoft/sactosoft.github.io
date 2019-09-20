@@ -4,7 +4,7 @@ Sactory.addWidget("message", function(message){
 			const match = message.matchAll(/`[^`]*`/g);
 			let curr, index = 0;
 			while(!(curr = match.next()).done) {
-				<f ~text=message.substring(index, index = curr.value.index) />
+				<:element ~text=message.substring(index, index = curr.value.index) />
 				<code ~text=curr.value[0].slice(1, -1) />
 				index += curr.value[0].length;
 			}
@@ -16,7 +16,7 @@ Sactory.addWidget("message", function(message){
 class Sandbox {
 
 	constructor({readonly, embedded, name, mode, source}) {
-		this.es6 = this.checkES6();
+		this.es6 = &this.checkES6();
 		this.runtime = document.getElementById("sactory").src;
 		this.lastId = (&0).localStorage("sandbox_id");
 		this.currentId = (&0).localStorage("sandbox_curr_id");
@@ -47,7 +47,7 @@ class Sandbox {
 		this.data.editorSource = this.data.*source;
 		this.result = async & => {
 			try {
-				return Transpiler.transpile({filename: this.data.*name, mode: this.data.*mode, es6: this.es6, sandboxed: true}, this.data.*source);
+				return Transpiler.transpile({filename: this.data.*name, mode: this.data.*mode, es6: this.*es6, sandboxed: true}, this.data.*source);
 			} catch(error) {
 				console.error(error);
 				return {error};
@@ -246,6 +246,12 @@ class Sandbox {
 						<button class="button danger" +click={{this.*settings=false}}><i class="fas fa-times" /></button>
 					</div>
 					<h3>Settings</h3>
+					<label>
+						<input type="checkbox" /> Debug
+					</label>
+					<label>
+						<input *checkbox=this.es6 /> Generate ES6 code
+					</label>
 					<:inherit &width="100%" @disabled=this.*readonly :whitelist="input" :whitelist="textarea">
 						<h4>Description</h4>
 						<textarea class="input" *value::change=this.data.*description />
@@ -379,6 +385,12 @@ class Sandbox {
 					}
 				}
 				&.settings {
+					label {
+						display: block;
+						& + label {
+							margin-top: 8px;
+						}
+					}
 					table {
 						width: 100%;
 						border-collapse: collapse;

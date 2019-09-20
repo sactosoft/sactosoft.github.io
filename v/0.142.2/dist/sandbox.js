@@ -4,7 +4,7 @@
 			const match = message.matchAll(/`[^`]*`/g);
 			let curr, index = 0;
 			while(!(curr = match.next()).done) {
-				ջժ(ջլ, [ջժ.create, "f", 0, [[5, "text", message.substring(index, index = curr.value.index)]]], [ջժ.append] );
+				ջժ(ջլ, [ջժ.update, [[5, "text", message.substring(index, index = curr.value.index)]]] );
 				ջժ(ջլ, [ջժ.create, "code", 0, [[5, "text", curr.value[0].slice(1, -1)]]], [ջժ.append] );
 				index += curr.value[0].length;
 			}
@@ -16,7 +16,7 @@
 class Sandbox {
 
 	constructor({readonly, embedded, name, mode, source}) {var ջլ=ջթ.cfa(ջի, arguments, 1);
-		this.es6 = this.checkES6();
+		this.es6 = (ջթ.cofv(this.checkES6()));
 		this.runtime = document.getElementById("sactory").src;
 		this.lastId = ((ջթ.cofv(0))).localStorage("sandbox_id");
 		this.currentId = ((ջթ.cofv(0))).localStorage("sandbox_curr_id");
@@ -47,12 +47,12 @@ class Sandbox {
 		this.data.editorSource = this.data.source.value;
 		this.result = ջթ.coff(() => {
 			try {
-				return Transpiler.transpile({filename: this.data.name.value, mode: this.data.mode.value, es6: this.es6, sandboxed: true}, this.data.source.value);
+				return Transpiler.transpile({filename: this.data.name.value, mode: this.data.mode.value, es6: this.es6.value, sandboxed: true}, this.data.source.value);
 			} catch(error) {
 				console.error(error);
 				return {error};
 			}
-		}).async().d(ջլ,  this.data.name,  this.data.mode,  this.data.source);
+		}).async().d(ջլ,  this.data.name,  this.data.mode,  this.es6,  this.data.source);
 		// source
 		this.srcdoc = ջթ.coff(() => `${this.data.head.value}<script src="${this.runtime}"></script><script>Sactory.ready(function(){${this.result.value.source && this.result.value.source.all}})</script>`).d(ջլ, this.data.head, this.result,  this.result);
 		// settings
@@ -246,6 +246,12 @@ class Sandbox {
 						ջժ(ջլ, [ջժ.create, "button", 0, [[0, "class", "button danger"], [3, "click", (event, target) => {this.settings.value=false}]]], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.create, "i", 0, [[0, "class", "fas fa-times"]]], [ջժ.append] );}], [ջժ.append]);
 					}], [ջժ.append]);
 					ջժ(ջլ, [ջժ.create, "h3", 0, []], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.text, `Settings`]);}], [ջժ.append]);
+					ջժ(ջլ, [ջժ.create, "label", 0, []], [ջժ.body, ջլ => {
+						ջժ(ջլ, [ջժ.create, "input", 0, [[0, "type", "checkbox"]]], [ջժ.append] );ջժ(ջլ, [ջժ.text, ` Debug
+					`]);}], [ջժ.append]);
+					ջժ(ջլ, [ջժ.create, "label", 0, []], [ջժ.body, ջլ => {
+						ջժ(ջլ, [ջժ.create, "input", 0, []], [ջժ.bind, ["checkbox", "", this.es6, ջխ => {this.es6=ջխ}]], [ջժ.append] );ջժ(ջլ, [ջժ.text, ` Generate ES6 code
+					`]);}], [ջժ.append]);
 					ջժ(ջլ, [ջժ.nop], [ջժ.body, ջլ => {var ջծ= /*whitelist="input"*/ /*whitelist="textarea"*/[[2, "width", "100%"], [1, "disabled", ջթ.bo(() => this.readonly.value, [this.readonly])]];
 						ջժ(ջլ, [ջժ.create, "h4", 0, []], [ջժ.body, ջլ => {ջժ(ջլ, [ջժ.text, `Description`]);}], [ջժ.append]);
 						ջժ(ջլ, [ջժ.create, "textarea", 0, (ջծ).concat([[0, "class", "input"]])], [ջժ.bind, ["value", "::change", ջթ.bo(() => this.data.description.value, [this.data.description]), ջխ => {this.data.description.value=ջխ}]], [ջժ.append] );
@@ -379,64 +385,70 @@ class Sandbox {
 					
 				
 				var ջօ=ջթ.select(ջչ, `&.settings`); 
-					var ջֆ=ջթ.select(ջօ, `table`); 
-						ջֆ.value(`width`, `100%`);
-						ջֆ.value(`border-collapse`, `collapse`);
-						var ջև=ջթ.select(ջֆ, `th, td`); 
-							ջև.value(`padding`, `4px 8px`);
+					var ջֆ=ջթ.select(ջօ, `label`); 
+						ջֆ.value(`display`, `block`);
+						var ջև=ջթ.select(ջֆ, `& + label`); 
+							ջև.value(`margin-top`, `8px`);
 						
-						var ռա=ջթ.select(ջֆ, `td`); 
-							ռա.value(`border-top`, `1px solid #ddd`);
+					
+					var ռա=ջթ.select(ջօ, `table`); 
+						ռա.value(`width`, `100%`);
+						ռա.value(`border-collapse`, `collapse`);
+						var ռբ=ջթ.select(ռա, `th, td`); 
+							ռբ.value(`padding`, `4px 8px`);
 						
-						var ռբ=ջթ.select(ջֆ, `tr th:first-child`); 
-							ռբ.value(`text-align`, `left`);
+						var ռգ=ջթ.select(ռա, `td`); 
+							ռգ.value(`border-top`, `1px solid #ddd`);
 						
-						var ռգ=ջթ.select(ջֆ, `tr td:nth-child(2), tr td:nth-child(3)`); 
-							ռգ.value(`text-align`, `center`);
+						var ռդ=ջթ.select(ռա, `tr th:first-child`); 
+							ռդ.value(`text-align`, `left`);
+						
+						var ռե=ջթ.select(ռա, `tr td:nth-child(2), tr td:nth-child(3)`); 
+							ռե.value(`text-align`, `center`);
 						
 					
 				
 			
 
-			var ռդ=ջթ.select(ջկ, `.bottom`); 
-				var ռե=ջթ.select(ռդ, `.frame, .source`); 
-					ռե.value(`position`, `absolute`);
-					ռե.value(`height`, `50%`);
-					ռե.value(`left, right`, `0`);
+			var ռզ=ջթ.select(ջկ, `.bottom`); 
+				var ռէ=ջթ.select(ռզ, `.frame, .source`); 
+					ռէ.value(`position`, `absolute`);
+					ռէ.value(`height`, `50%`);
+					ռէ.value(`left, right`, `0`);
 				
-				var ռզ=ջթ.select(ռդ, `.frame`); 
-					ռզ.value(`width`, `100%`);
-					ռզ.value(`top`, `0`);
-					ռզ.value(`border-bottom`, `2px solid transparent`);
-					var ռէ=ջթ.select(ռզ, `iframe`); 
-						ռէ.value(`width, height`, `100%`);
-						ռէ.value(`margin`, `0`);
-						ռէ.value(`border`, `0`);
-						ռէ.value(`background`, `white`);
+				var ռը=ջթ.select(ռզ, `.frame`); 
+					ռը.value(`width`, `100%`);
+					ռը.value(`top`, `0`);
+					ռը.value(`border-bottom`, `2px solid transparent`);
+					var ռթ=ջթ.select(ռը, `iframe`); 
+						ռթ.value(`width, height`, `100%`);
+						ռթ.value(`margin`, `0`);
+						ռթ.value(`border`, `0`);
+						ռթ.value(`background`, `white`);
 					
 				
-				var ռը=ջթ.select(ռդ, `.source`); 
-					ռը.value(`bottom`, `0`);
-					ռը.value(`border-top`, `2px solid transparent`);
+				var ռժ=ջթ.select(ռզ, `.source`); 
+					ռժ.value(`bottom`, `0`);
+					ռժ.value(`border-top`, `2px solid transparent`);
 				
 			
 
-			var ռթ=ջթ.select(ջկ, `.CodeMirror`); 
-				ռթ.value(`background`, `white !important`);
+			var ռի=ջթ.select(ջկ, `.CodeMirror`); 
+				ռի.value(`background`, `white !important`);
 			
 
-			var ռժ=ջթ.select(ջկ, `&.hide-result`); 
-				var ռի=ջթ.select(ռժ, `.bottom`); 
-					var ռլ=ջթ.select(ռի, `.frame`); 
-						ռլ.value(`height`, `100%`);
-						ռլ.value(`border-bottom-width`, `0`);
+			var ռլ=ջթ.select(ջկ, `&.hide-result`); 
+				var ռխ=ջթ.select(ռլ, `.bottom`); 
+					var ռծ=ջթ.select(ռխ, `.frame`); 
+						ռծ.value(`height`, `100%`);
+						ռծ.value(`border-bottom-width`, `0`);
 					
-					var ռխ=ջթ.select(ռի, `.source`); 
-						ռխ.value(`display`, `none`);
+					var ռկ=ջթ.select(ռխ, `.source`); 
+						ռկ.value(`display`, `none`);
 					
 				
-			ջժ(ջլ, [ջժ.text, `
-		`]);return ջկ.content}, [], [])}], [ջժ.append]);
+			
+		return ջկ.content}, [], [])}], [ջժ.append])
 	}
 
 };
