@@ -1,0 +1,105 @@
+const fs = require("fs");
+
+const Index = require("./index");
+
+const { encode } = require("../_src/dist/hash");
+
+const res = "./_src/examples/";
+
+module.exports = class extends Index {
+	
+	render({root, version}) {
+		return <:super>
+			<:head>
+				<title>Examples — Sactory v${version}</title>
+			</:head>
+			<div>
+				<style :scoped>
+					margin: 0 auto;
+					padding: 16px;
+					width: 100%;
+					max-width: 1024px;
+					background: white;
+					border-radius: 5px;
+					display: flex;
+					justify-content: space-evenly;
+
+					.example {
+
+					}
+
+					.links {
+						a + a::before {
+							content: " - ";
+						}
+					}
+
+					@media screen and (max-width: 1024px) {
+						border-radius: 0;
+					}
+				</style>
+				foreach(fs.readdirSync(res) as filename) {
+					const name = filename.slice(0, -3);
+					const example = examples[name];
+					<div class="example">
+						<a class="title" href=`./sandbox#${encode({name, source: fs.readFileSync(res + filename, "utf8")})}`>${example.title}</a>
+						<div class="description">
+							<[example.render] />
+						</div>
+						if(example.links) {
+							<div class="links">
+								foreach(example.links as [type, href]) {
+									<a href=href target="_blank">${type}</a>
+								}
+							</div>
+						}
+					</div>
+				}
+			</div>
+		</:super>
+	}
+
+};
+
+const examples = {
+
+	"game-of-life": {
+		title: "Game of Life",
+		render() {
+			return <#document-fragment>
+				<p>A cellular automation zero-player game.</p>
+			</#document-fragment>
+		},
+		links: [
+			["Wikipedia", "https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life"]
+		]
+	},
+
+	"snake": {
+		title: "Snake",
+		render() {
+			return <#document-fragment>
+
+			</#document-fragment>
+		}
+	},
+
+	"todomvc": {
+		title: "TodoMVC",
+		render() {
+			return <#document-fragment>
+
+			</#document-fragment>
+		}
+	},
+
+	"polygons": {
+		title: "SVG Polygons",
+		render() {
+			return <#document-fragment>
+				<p>SVG generation of regular polygons</p>
+			</#document-fragment>
+		}
+	}
+
+};

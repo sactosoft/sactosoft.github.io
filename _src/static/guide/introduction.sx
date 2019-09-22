@@ -1,9 +1,0 @@
-const Guide = require("./guide");
-
-module.exports = class extends Guide {
-
-	constructor() {
-		super("introduction");
-	}
-
-}

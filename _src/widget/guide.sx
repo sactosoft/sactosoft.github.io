@@ -1,145 +1,141 @@
+const Index = require("./index");
+
 const capitalize = value => value.charAt(0).toUpperCase() + value.substr(1);
 
-module.exports = class {
+module.exports = class extends Index {
 
-	constructor(section) {
-		this.section = section;
-	}
-
-	render({version, sections}) {
-		<:head>
-			<title>${capitalize(this.section)} — Guide — Sactory v${version}</title>
-		</:head>
-		return <div>
-			<input id="menu" type="checkbox" &display="none" />
-			<div class="sections">
-				const index = sections.findIndex(([section]) => section == this.section);
-				<label for="menu" class="menu-toggler">
-					<i class="fas fa-bars" />
-				</label>
-				<h1>
-					if(index > 0) {
-						<a href=`./${sections[index - 1][0]}`>
-							<i class="fas fa-arrow-left" />
-						</a>
-					}
-					<span>${capitalize(this.section)}</span>
-					if(index < sections.length - 1) {
-						<a href=`./${sections[index + 1][0]}`>
-							<i class="fas fa-arrow-right" />
-						</a>
-					}
-				</h1>
-				foreach(sections[index][1] as sub) {
-					<h2 id=sub class="section-title">
-						<a href=`#${sub}`>#</a>
-						<span>${capitalize(sub)}</span>
-						<a href=`../tour/${this.section}/${sub}` target="_blank" title="Open in the interactive tour">
-							<i class="far fa-keyboard" />
-						</a>
-					</h2>
-					<hr />
-					<[require(`./tour_${this.section}_${sub}`)] $guide />
-				}
-			</div>
-			<div class="menu">
-				<label for="menu" class="menu-toggler">
-					<i class="fas fa-times" />
-				</label>
-				foreach(sections as [section, subs]) {
-					<a href=`./${section}` ~text=capitalize(section) />
-					<div class="section">
-						foreach(subs as sub) {
-							<a href=`./${section}#${sub}` ~text=capitalize(sub) />
+	render({version, sections, section, contents}) {
+		return <:super>
+			<:head>
+				<title>${capitalize(section)} — Guide — Sactory v${version}</title>
+			</:head>
+			<div>
+				<input id="menu" type="checkbox" &display="none" />
+				<div class="sections">
+					const index = sections.findIndex(([s]) => s == section);
+					<label for="menu" class="menu-toggler">
+						<i class="fas fa-bars" />
+					</label>
+					<h1>
+						if(index > 0) {
+							<a href=`./${sections[index - 1][0]}`>
+								<i class="fas fa-arrow-left" />
+							</a>
 						}
-					</div>
-				}
+						<span>${capitalize(section)}</span>
+						if(index < sections.length - 1) {
+							<a href=`./${sections[index + 1][0]}`>
+								<i class="fas fa-arrow-right" />
+							</a>
+						}
+					</h1>
+					foreach(contents as {sub, content}) {
+						<h2 id=sub class="section-title">
+							<a href=`#${sub}`>#</a>
+							<span>${capitalize(sub)}</span>
+							<a href=`../tour/${section}/${sub}` target="_blank" title="Open in the interactive tour">
+								<i class="far fa-keyboard" />
+							</a>
+						</h2>
+						<hr />
+						<[content] $guide />
+					}
+				</div>
+				<div class="menu">
+					<label for="menu" class="menu-toggler">
+						<i class="fas fa-times" />
+					</label>
+					foreach(sections as [section, subs]) {
+						<a href=`./${section}` ~text=capitalize(section) />
+						<div class="section">
+							foreach(subs as sub) {
+								<a href=`./${section}#${sub}` ~text=capitalize(sub) />
+							}
+						</div>
+					}
+				</div>
+				<style :scoped>
+					position: relative;
+					margin: 0 auto;
+					width, height: 100%;
+					max-width: 1024px;
+					border-radius: 5px;
+					overflow: hidden;
+
+					.menu, .sections {
+						position: absolute;
+						top, bottom: 0;
+						background: white;
+						padding: 16px;
+						overflow-y: auto;
+					}
+
+					.menu {
+						left: 0;
+						width: 256px;
+						.section {
+							padding-left: 16px;
+						}
+						a {
+							display: block;
+							color: #333;
+							font-weight: normal;
+						}
+						& > a {
+							font-weight: bold;
+						}
+					}
+
+					.menu-toggler {
+						display: none;
+						font-size: 24px;
+						cursor: pointer;
+					}
+
+					.sections {
+						right: 0;
+						left: 260px;
+						h1 {
+							* + * {
+								margin-left: 12px;
+							}
+							i {
+								font-size: .75em;
+							}
+						}
+						.section-title {
+							margin-top: 32px;
+							* + * {
+								margin-left: 8px;
+							}
+						}
+					}
+
+					@media screen and (max-width: 1056px) {
+						& {
+							max-width: 100%;
+							border-radius: 0;
+						}
+					}
+
+					@media screen and (max-width: 768px) {
+						.menu {
+							transition: all .25s ease-out;
+							transform: translateX(-100%);
+						}
+						#menu:checked ~ .menu {
+							transform: none;
+							box-shadow: 0 1px 32px rgba(0, 0, 0, .5);
+						} 
+						.menu-toggler {
+							display: inline-block;
+						}
+						.sections {
+							left: 0;
+						}
+					}
+				</style>
 			</div>
-		</div>
+		</:super>
 	}
-
-	static style() {
-		return <style>
-			position: relative;
-			margin: 0 auto;
-			width, height: 100%;
-			max-width: 1024px;
-			border-radius: 5px;
-			overflow: hidden;
-
-			.menu, .sections {
-				position: absolute;
-				top, bottom: 0;
-				background: white;
-				padding: 16px;
-				overflow-y: auto;
-			}
-
-			.menu {
-				left: 0;
-				width: 256px;
-				.section {
-					padding-left: 16px;
-				}
-				a {
-					display: block;
-					color: #333;
-					font-weight: normal;
-				}
-				& > a {
-					font-weight: bold;
-				}
-			}
-
-			.menu-toggler {
-				display: none;
-				font-size: 24px;
-				cursor: pointer;
-			}
-
-			.sections {
-				right: 0;
-				left: 260px;
-				h1 {
-					* + * {
-						margin-left: 12px;
-					}
-					i {
-						font-size: .75em;
-					}
-				}
-				.section-title {
-					margin-top: 32px;
-					* + * {
-						margin-left: 8px;
-					}
-				}
-			}
-
-			@media screen and (max-width: 1056px) {
-				& {
-					max-width: 100%;
-					border-radius: 0;
-				}
-			}
-
-			@media screen and (max-width: 768px) {
-				.menu {
-					transition: all .25s ease-out;
-					transform: translateX(-100%);
-				}
-				#menu:checked ~ .menu {
-					transform: none;
-					box-shadow: 0 1px 32px rgba(0, 0, 0, .5);
-				} 
-				.menu-toggler {
-					display: inline-block;
-				}
-				.sections {
-					left: 0;
-				}
-			}
-		</style>
-	}
-
 };

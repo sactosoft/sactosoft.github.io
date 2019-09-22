@@ -16,7 +16,8 @@ Sactory.addWidget("message", function(message){
 class Sandbox {
 
 	constructor({readonly, embedded, name, mode, source}) {
-		this.es6 = &this.checkES6();
+		this.es6 = (&this.checkES6()).localStorage("sandbox_es6");
+		this.debug = (&false).localStorage("sandbox_debug");
 		this.runtime = document.getElementById("sactory").src;
 		this.lastId = (&0).localStorage("sandbox_id");
 		this.currentId = (&0).localStorage("sandbox_curr_id");
@@ -247,7 +248,7 @@ class Sandbox {
 					</div>
 					<h3>Settings</h3>
 					<label>
-						<input type="checkbox" /> Debug
+						<input *checkbox=this.debug /> Debug
 					</label>
 					<label>
 						<input *checkbox=this.es6 /> Generate ES6 code

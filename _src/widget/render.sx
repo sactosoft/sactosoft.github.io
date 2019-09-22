@@ -1,0 +1,3 @@
+module.exports = function(widget, attrs){
+	return <[widget] $=attrs />.render();
+};

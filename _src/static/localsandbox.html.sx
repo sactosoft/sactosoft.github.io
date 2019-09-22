@@ -1,0 +1,16 @@
+const Index = require("./index");
+const sandboxImports = require("./sandbox-imports");
+
+module.exports = class extends Index {
+	
+	render({root, version}) {
+		return <:super>
+			<:head>
+				<title>Sandbox (Local) — Sactory v${version}</title>
+				<[sandboxImports] $root=root $dist="../factory/dist/" />
+			</:head>
+			<#app $name="Sandbox" $src="./dist/sandbox.js" />
+		</:super>
+	}
+
+};

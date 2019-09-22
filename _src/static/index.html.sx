@@ -1,0 +1,59 @@
+const Index = require("./index");
+
+module.exports = class extends Index {
+	
+	render({root, version}) {
+		return <:super>
+			<:head>
+				<title>Sactory — JavaScript library for creating XML-like documents</title>
+				<style>
+					body {
+						overflow: hidden;
+					}
+
+					.header, .header * {
+						z-index: 1;
+					}
+				</style>
+			</:head>
+			<div>
+				<style :scoped>
+					text-align: center;
+					font-family: Consolas, monospace;
+					font-size: 32px;
+					color: white;
+					display: flex;
+
+					.center {
+						position: absolute;
+						top, left: 50%;
+						transform: translate(-50%, -50%);
+					}
+
+					.heptagon {
+						width, height: calc(100vmin + 128px);
+						background: url(${root}res/icon_dark.svg);
+						animation: rotate 280s linear infinite;
+						& > * {
+							width, height: 80%;
+							background: url(${root}res/icon_light.svg);
+							animation: rotate 140s linear infinite;
+							animation-direction: reverse;
+						}
+					}
+
+					@keyframes rotate {
+						from < transform: translate(-50%, -50%) rotate(0deg);
+						to < transform: translate(-50%, -50%) rotate(360deg);
+					}
+				</style>
+				<div class="center heptagon"><div class="center" /></div>
+				<div class="center" &z-index=1>
+					<p>Sactory is still under construction.</p>
+					<p &font-size="1.25em">v${version}</p>
+				</div>
+			</div>
+		</:super>
+	}
+
+};

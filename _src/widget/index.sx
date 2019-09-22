@@ -1,0 +1,53 @@
+module.exports = class {
+
+	render({version, root, sections}) {
+		return <#document>
+			<:head>
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
+				<link rel="icon" type="image/png" href=`${root}res/icon.png` />
+				<link rel="stylesheet" href=`${root}css/theme.css` />
+				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css" />
+				<script src="/dist/versions.js" />
+				<script async src="https://www.googletagmanager.com/gtag/js?id=UA-148167806-1" />
+				<script>!function(){var dataLayer=window.dataLayer||[];dataLayer.push("js",new Date());dataLayer.push("config","UA-148167806-1");}()</script>
+			</:head>
+			<:body>
+				<div class="header">
+					<div>
+						<img src=`${root}res/icon_white.svg` &height="32px" />
+						<a href=root &font-size="24px">Sactory</a>
+					</div>
+					<div>
+						<select>
+							<option value=version ~text=version />
+						</select>
+						<a href=`${root}sandbox`>Sandbox</a>
+						<a href=`${root}guide/${sections[0][0]}`>Guide</a>
+						<a href=`${root}api`>API</a>
+						<a href=`${root}examples`>Examples</a>
+						<a href="https://github.com/sactory" target="_blank" title="GitHub">
+							<i class="fab fa-github" &font-size="1.25em" &vertical-align="middle" />
+						</a>
+					</div>
+				</div>
+				<div class="content" :slot>
+					<style :scoped>
+						p {
+							line-height: 1.6em;
+							word-spacing: .05em;
+						}
+
+						a {
+							color: #48BB78;
+							font-weight: 600;
+							&:hover {
+								color: #38A169;
+							}
+						}
+					</style>
+				</div>
+			</:body>
+		</#document>
+	}
+
+};

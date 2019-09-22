@@ -1,0 +1,62 @@
+const approx = num => Math.round(num * 100000) / 100000;
+
+let guides = &false;
+let count = &12;
+
+function polygon({sides, size = 100, fill = "darkviolet"}) {
+	const radius = size / 2;
+	let coords = [];
+	for(let i=0; i<sides; i++) {
+		coords.push([Math.cos(2 * Math.PI * i / sides), Math.sin(2 * Math.PI * i / sides)]);
+	}
+	const points = coords.map(values => values.map(value => approx(radius + radius * value)).join(",")).join(" ");
+	return <svg {width, height}=size viewBox=`0 0 ${size} ${size}`>
+		<circle {cx, cy, r}=radius fill=Sactory.css.lighten(fill, .75) ~show=guides />
+		<polygon ...{fill, points} />
+	</svg>
+}
+
+<:body>
+	<style :scoped>
+		label {
+			display: block;
+		}
+		
+		.polygons {
+			display: flex;
+			flex-wrap: wrap;
+			.polygon {
+				position: relative;
+				display: inline-block;
+				margin: 8px;
+				svg {
+					transform: rotate(-90deg);
+					vertical-align: top;
+				}
+				.sides {
+					position: absolute;
+					top, left: 50%;
+					transform: translate(-50%, -50%);
+					color: white;
+				}
+			}
+		}
+	</style>
+	<label>
+		<input *checkbox=guides />
+		Show Guides
+	</label>
+	<label>
+		Number of sides
+		<input *number:number=count />
+	</label>
+	<hr />
+	<div class="polygons">
+		foreach(from 3 to *count + 1 as i) {
+			<div class="polygon">
+				<[polygon] $sides=i />
+				<span class="sides">${i}</span>
+			</div>
+		}
+	</div>
+</:body>
