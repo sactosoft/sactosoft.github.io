@@ -38,8 +38,15 @@ module.exports = class {
 			</p>
 			<p>
 				Also note that all the examples in the ${type} are written using ES6 syntax and the interactive
-				examples will not run on outdated browsers.
+				examples will not run on outdated browsers<span id="outdated">.</span>
 			</p>
+			<script>
+				try {
+					eval("() => {}");
+				} catch(e) {
+					document.getElementById("outdated").textContent = ", like the one you are using.";
+				}
+			</script>
 		</#document-fragment>
 	}
 

@@ -22,7 +22,12 @@
 				it might be a good idea to improve your skills in the used technologies and JavaScript in general.
 			</p><p>
 				Also note that all the examples in the guide are written using ES6 syntax and the interactive
-				examples will not run on outdated browsers.
-			</p><h2 id="features" class="section-title"><a href="#features">#</a><span>Features</span><a href="../tour/introduction/features" target="_blank" title="Open in the interactive tour"><i class="far fa-keyboard"></i></a></h2><hr><p>
+				examples will not run on outdated browsers<span id="outdated">.</span></p><script>
+				try {
+					eval("() => {}");
+				} catch(e) {
+					document.getElementById("outdated").textContent = ", like the one you are using.";
+				}
+			</script><h2 id="features" class="section-title"><a href="#features">#</a><span>Features</span><a href="../tour/introduction/features" target="_blank" title="Open in the interactive tour"><i class="far fa-keyboard"></i></a></h2><hr><p>
 				The main goal of Sactory is...
 			</p></div><div class="menu"><label for="menu" class="menu-toggler"><i class="fas fa-times"></i></label><a href="./introduction">Introduction</a><div class="section"><a href="./introduction#about">About</a><a href="./introduction#features">Features</a></div></div><style>.sa23{position:relative;margin:0 auto;width:100%;height:100%;max-width:1024px;border-radius:5px;overflow:hidden;}.sa23 .menu, .sa23 .sections{position:absolute;top:0;bottom:0;background:white;padding:16px;overflow-y:auto;}.sa23 .menu{left:0;width:256px;}.sa23 .menu .section{padding-left:16px;}.sa23 .menu a{display:block;color:#333;font-weight:normal;}.sa23 .menu > a{font-weight:bold;}.sa23 .menu-toggler{display:none;font-size:24px;cursor:pointer;}.sa23 .sections{right:0;left:260px;}.sa23 .sections h1 * + *{margin-left:12px;}.sa23 .sections h1 i{font-size:.75em;}.sa23 .sections .section-title{margin-top:32px;}.sa23 .sections .section-title * + *{margin-left:8px;}@media screen and (max-width: 1056px){.sa23{max-width:100%;border-radius:0;}}@media screen and (max-width: 768px){.sa23 .menu{transition:all .25s ease-out;transform:translateX(-100%);}.sa23 #menu:checked ~ .menu{transform:none;box-shadow:0 1px 32px rgba(0, 0, 0, .5);}.sa23 .menu-toggler{display:inline-block;}.sa23 .sections{left:0;}}</style></div></div></body></html>

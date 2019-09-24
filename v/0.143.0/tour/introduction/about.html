@@ -22,5 +22,10 @@
 				it might be a good idea to improve your skills in the used technologies and JavaScript in general.
 			</p><p>
 				Also note that all the examples in the tour are written using ES6 syntax and the interactive
-				examples will not run on outdated browsers.
-			</p></div><div class="sandbox"><script id="sa16">window.addEventListener("load",function(){var e=document.querySelector("#sa16");Sactory.chain({element: e.parentNode, anchor: e.nextSibling}, [Sactory.chain.create, Sandbox, 0, [[4, "orientation", "y"], [4, "hide", ["result"]], [4, "embedded", true], [4, "name", "introduction/about.sx"], [4, "source", "let count = &0;\r\n\r\n<:body>\r\n\t<p>Count to ${*count}</p>\r\n\t<button on:click={{*count++}}>Add</button>\r\n\t<button on:click={{*count--}}>Remove</button>\r\n</:body>\r\n"]]], [Sactory.chain.append])})</script></div></div></div></body></html>
+				examples will not run on outdated browsers<span id="outdated">.</span></p><script>
+				try {
+					eval("() => {}");
+				} catch(e) {
+					document.getElementById("outdated").textContent = ", like the one you are using.";
+				}
+			</script></div><div class="sandbox"><script id="sa16">window.addEventListener("load",function(){var e=document.querySelector("#sa16");Sactory.chain({element: e.parentNode, anchor: e.nextSibling}, [Sactory.chain.create, Sandbox, 0, [[4, "orientation", "y"], [4, "hide", ["result"]], [4, "embedded", true], [4, "name", "introduction/about.sx"], [4, "source", "let count = &0;\r\n\r\n<:body>\r\n\t<p>Count to ${*count}</p>\r\n\t<button on:click={{*count++}}>Add</button>\r\n\t<button on:click={{*count--}}>Remove</button>\r\n</:body>\r\n"]]], [Sactory.chain.append])})</script></div></div></div></body></html>

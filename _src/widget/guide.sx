@@ -95,6 +95,7 @@ module.exports = class extends Index {
 					.sections {
 						right: 0;
 						left: 260px;
+						scroll-behavior: smooth;
 						h1 {
 							* + * {
 								margin-left: 12px;

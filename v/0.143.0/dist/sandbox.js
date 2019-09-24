@@ -181,7 +181,7 @@ class Sandbox {
 		const editor = this.initCodeMirror(element, this.readonly.value, "jsx");
 		editor.on("change", () => this.data.editorSource = editor.getValue());
 		this.data.source.$$subscribe(ջլ, value => editor.setValue(value), 8934);
-		ջժ(ջլ, [ջժ.use, element.nextElementSibling], [ջժ.update, [[3, ջթ.attr((ջթ.config.shortcut.save), ":prevent"), (event, target) => {this.save()}]]] );
+		ջժ(ջլ, [ջժ.use, element.nextElementSibling], [ջժ.update, [[3, ջթ.attr((ջթ.config.s["save"]), ":prevent"), (event, target) => {this.save()}]]] );
 		if(this.readonly.value) {
 			//TODO remove readOnly option
 			this.readonly.$$subscribe(ջլ, () => editor.setOption("readOnly", false));
