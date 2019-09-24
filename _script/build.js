@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const mkdirp = require("mkdirp");
 const { ncp } = require("ncp");
+const { transformSync } = require("@babel/core");
 
 const sactory = "../../factory/";
 
@@ -108,9 +109,19 @@ fs.readdirSync("./_src/dist").forEach(fname => {
 	const filename = "./_src/dist/" + fname;
 	let source = fs.readFileSync(filename, "utf8");
 	if(fname.endsWith(".sx")) {
+		// transpile using sactory
 		source = transpile({filename, mode, es6: true}, source).source.all;
 	}
-	//TODO use babel to transpile to es5
+	// transpile to es5
+	source = transformSync(source, {
+		presets: ["@babel/preset-env", ["babel-preset-minify", {
+			builtIns: false,
+			mangle: true
+		}]],
+		minified: true,
+		comments: false
+	}).code;
+	// save
 	write("dist/" + fname.slice(0, -2) + "js", source);
 });
 
@@ -127,10 +138,10 @@ fs.readdirSync(sactoryDist).forEach(filename => {
 
 // copy resources
 ncp("./_src/res", "./res");
+ncp("./_src/res", `./v/${version}/res`);
 
-// copy files in css and res folders in current version
+// copy css folders
 ncp("./css", `./v/${version}/css`);
-ncp("./res", `./v/${version}/res`);
 
 // write global script for creating the version select
 fs.writeFile("./dist/versions.js", `

@@ -2,7 +2,10 @@
 	if(typeof module != "undefined" && module.exports) {
 		module.exports = a(data => Buffer.from(data, "base64").toString(), data => Buffer.from(data.buffer).toString("base64"));
 	} else {
-		Object.assign(window, a(atob, data => btoa(data.toString())));
+		var b = a(atob, data => btoa(data.toString()));
+		for(var key in b) {
+			window[key] = b[key];
+		}
 	}
 }(function(decodeBase64, encodeBase64){
 

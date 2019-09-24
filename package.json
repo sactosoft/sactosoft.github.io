@@ -13,9 +13,13 @@
 		"url": "https://github.com/sactory/sactory.github.io/issues"
 	},
 	"devDependencies": {
+		"@babel/core": "^7.6.2",
+		"@babel/preset-env": "^7.6.2",
+		"babel-preset-minify": "^0.5.1",
+		"codemirror": "^5.49.0",
 		"mkdirp": "^0.5.1",
 		"ncp": "^2.0.0",
 		"sactory": "^0.142.1"
 	},
-	"dependencies": {}
+	"private": true
 }
