@@ -1,20 +1,27 @@
 body {
+	position: relative;
 	min-height: 100vh;
 	//background: linear-gradient(135deg, #9400d3, #7000a0);
-	background: linear-gradient(135deg, ${@lighten("#7000a0", .25)}, ${@darken("#7000a0", .25)});
 	color: #333;
+	&::before {
+		content: "";
+		position: fixed;
+	}
 }
 
-hr {
-	height: 1px;
-	background: #ddd;
-}
+.header-outer {
 
-.header {
-
-	margin: 0 auto;
-	width: calc(100% - 32px);
+	position: fixed;
+	top, left, right: 0;
 	height: 64px;
+	overflow: hidden;
+
+}
+
+.header-inner {
+
+	height: 64px;
+	padding: 0 16px;
 	display: flex;
 	justify-content: space-between;
 
@@ -43,10 +50,37 @@ hr {
 
 }
 
+body::before, .header-background {
+	top, left: 0;
+	width: 100%;
+	height: 100vh;
+	background: linear-gradient(to bottom right, ${@lighten("#7000a0", .25)}, ${@darken("#7000a0", .25)});
+}
+
 .content {
+
 	position: absolute;
 	top: 64px;
 	right, bottom, left: 0;
+
+	p {
+		line-height: 1.6em;
+		word-spacing: .05em;
+	}
+
+	a {
+		color: #48BB78;
+		font-weight: 600;
+		&:hover {
+			color: #38A169;
+		}
+	}
+	
+}
+
+hr {
+	height: 1px;
+	background: #ddd;
 }
 
 .toast {

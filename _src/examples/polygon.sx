@@ -1,0 +1,41 @@
+const points = (value, i, length) => {
+	let x = 0;
+	let y = -value;
+	let angle = Math.PI * 2 / length * i;
+	let cos = Math.cos(angle);
+	let sin = Math.sin(angle);
+	return [x * cos - y * sin, x * sin + y * cos];
+};
+
+const join = values => values.map(v => v.join(",")).join(" ");
+
+let color = &"#9400d3";
+
+let sides = &[&1, &1, &1, &1, &1];
+let background = & => *sides.map((value, i, {length}) => points(1, i, length));
+let foreground = & => *sides.map((value, i, {length}) => points(**value, i, length));
+
+<:body>
+	<svg {width, height}=256 viewBox="-1 -1 2 2">
+		<polygon fill=Sactory.css.lighten(*color, .75) points=join(*background) />
+		<polygon fill=*color points=join(*foreground) />
+	</svg>
+	<hr />
+	<input *color=color />
+	<button +click={{*sides.push(&1)}}>Add Side</button>
+	<button +click={{*sides.pop()}}>Remove Side</button>
+	<hr />
+	foreach(*sides as side, i) {
+		<label>
+			<span>${i + 1}</span>
+			<:inherit min=0 max=1 step=.01>
+				<input *range:number=side />
+				<input *number:number=side />
+			</:inherit>
+		</label>
+	}
+	<style>
+		label < display: block;
+		input < vertical-align: middle;
+	</style>
+</:body>

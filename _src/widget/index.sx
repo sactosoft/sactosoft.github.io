@@ -12,39 +12,28 @@ module.exports = class {
 				<script>!function(){var dataLayer=window.dataLayer||[];dataLayer.push("js",new Date());dataLayer.push("config","UA-148167806-1");}()</script>
 			</:head>
 			<:body>
-				<div class="header">
-					<div>
-						<img src=`${root}res/icon_white.svg` &height="32px" />
-						<a href=root &font-size="24px">Sactory</a>
+				<div class="content" :slot />
+				<div class="header-outer">
+					<div class="header-background">
+						<div class="header-inner">
+							<div>
+								<img src=`${root}res/icon_white.svg` &height="32px" />
+								<a href=root &font-size="24px">Sactory</a>
+							</div>
+							<div>
+								<select>
+									<option value=version ~text=version />
+								</select>
+								<a href=`${root}sandbox`>Sandbox</a>
+								<a href=`${root}guide/${sections[0][0]}`>Guide</a>
+								<a href=`${root}api`>API</a>
+								<a href=`${root}examples`>Examples</a>
+								<a href="https://github.com/sactory" target="_blank" title="GitHub">
+									<i class="fab fa-github" &font-size="1.25em" &vertical-align="middle" />
+								</a>
+							</div>
+						</div>
 					</div>
-					<div>
-						<select>
-							<option value=version ~text=version />
-						</select>
-						<a href=`${root}sandbox`>Sandbox</a>
-						<a href=`${root}guide/${sections[0][0]}`>Guide</a>
-						<a href=`${root}api`>API</a>
-						<a href=`${root}examples`>Examples</a>
-						<a href="https://github.com/sactory" target="_blank" title="GitHub">
-							<i class="fab fa-github" &font-size="1.25em" &vertical-align="middle" />
-						</a>
-					</div>
-				</div>
-				<div class="content" :slot>
-					<style :scoped>
-						p {
-							line-height: 1.6em;
-							word-spacing: .05em;
-						}
-
-						a {
-							color: #48BB78;
-							font-weight: 600;
-							&:hover {
-								color: #38A169;
-							}
-						}
-					</style>
 				</div>
 			</:body>
 		</#document>

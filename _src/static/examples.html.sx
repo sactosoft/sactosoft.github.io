@@ -93,11 +93,11 @@ const examples = {
 		}
 	},
 
-	"polygons": {
-		title: "SVG Polygons",
+	"polygon": {
+		title: "Polygon",
 		render() {
 			return <#document-fragment>
-				<p>SVG generation of regular polygons</p>
+				<p>Interactive SVG polygon using runtime observables.</p>
 			</#document-fragment>
 		}
 	}

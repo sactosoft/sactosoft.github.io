@@ -11,36 +11,6 @@ module.exports = class extends Index {
 			</:head>
 			<div>
 				<input id="menu" type="checkbox" &display="none" />
-				<div class="sections">
-					const index = sections.findIndex(([s]) => s == section);
-					<label for="menu" class="menu-toggler">
-						<i class="fas fa-bars" />
-					</label>
-					<h1>
-						if(index > 0) {
-							<a href=`./${sections[index - 1][0]}`>
-								<i class="fas fa-arrow-left" />
-							</a>
-						}
-						<span>${capitalize(section)}</span>
-						if(index < sections.length - 1) {
-							<a href=`./${sections[index + 1][0]}`>
-								<i class="fas fa-arrow-right" />
-							</a>
-						}
-					</h1>
-					foreach(contents as {sub, content}) {
-						<h2 id=sub class="section-title">
-							<a href=`#${sub}`>#</a>
-							<span>${capitalize(sub)}</span>
-							<a href=`../tour/${section}/${sub}` target="_blank" title="Open in the interactive tour">
-								<i class="far fa-keyboard" />
-							</a>
-						</h2>
-						<hr />
-						<[content] $guide />
-					}
-				</div>
 				<div class="menu">
 					<label for="menu" class="menu-toggler">
 						<i class="fas fa-times" />
@@ -54,23 +24,51 @@ module.exports = class extends Index {
 						</div>
 					}
 				</div>
+				<div class="sections">
+					<div class="container">
+						const index = sections.findIndex(([s]) => s == section);
+						<label for="menu" class="menu-toggler">
+							<i class="fas fa-bars" />
+						</label>
+						<h1>
+							if(index > 0) {
+								<a href=`./${sections[index - 1][0]}`>
+									<i class="fas fa-arrow-left" />
+								</a>
+							}
+							<span>${capitalize(section)}</span>
+							if(index < sections.length - 1) {
+								<a href=`./${sections[index + 1][0]}`>
+									<i class="fas fa-arrow-right" />
+								</a>
+							}
+						</h1>
+						foreach(contents as {sub, content}) {
+							<h2 id=sub class="section-title">
+								<a href=`#${sub}`>#</a>
+								<span>${capitalize(sub)}</span>
+								<a href=`../tour/${section}/${sub}` target="_blank" title="Open in the interactive tour">
+									<i class="far fa-keyboard" />
+								</a>
+							</h2>
+							<hr />
+							<[content] $guide />
+						}
+					</div>
+				</div>
 				<style :scoped>
 					position: relative;
-					margin: 0 auto;
-					width, height: 100%;
-					max-width: 1024px;
-					border-radius: 5px;
-					overflow: hidden;
+					min-height: 100%;
 
 					.menu, .sections {
-						position: absolute;
-						top, bottom: 0;
 						background: white;
+						min-height: 100%;
 						padding: 16px;
-						overflow-y: auto;
 					}
 
 					.menu {
+						position: fixed;
+						top: 64px;
 						left: 0;
 						width: 256px;
 						.section {
@@ -93,9 +91,13 @@ module.exports = class extends Index {
 					}
 
 					.sections {
-						right: 0;
-						left: 260px;
-						scroll-behavior: smooth;
+						margin-left: 260px;
+						width: calc(100% - 260px);
+						.container {
+							margin: 0 auto;
+							max-width: 700px;
+							scroll-behavior: smooth;
+						}
 						h1 {
 							* + * {
 								margin-left: 12px;
@@ -112,14 +114,7 @@ module.exports = class extends Index {
 						}
 					}
 
-					@media screen and (max-width: 1056px) {
-						& {
-							max-width: 100%;
-							border-radius: 0;
-						}
-					}
-
-					@media screen and (max-width: 768px) {
+					@media screen and (max-width: 956px) {
 						.menu {
 							transition: all .25s ease-out;
 							transform: translateX(-100%);
@@ -132,7 +127,8 @@ module.exports = class extends Index {
 							display: inline-block;
 						}
 						.sections {
-							left: 0;
+							margin-left: 0;
+							width: 100%;
 						}
 					}
 				</style>

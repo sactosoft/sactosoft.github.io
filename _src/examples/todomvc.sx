@@ -2,28 +2,23 @@ let id = (&0).localStorage("todo_id");
 let data = &[];
 let input = &"";
 
-let cdata = [];
-let left = & => ^data.reduce((acc, {completed}) => acc + !^completed, 0);
+let left = & => *data.reduce((acc, {completed}) => acc + !**completed, 0);
 
 const add = () => {
-	const text = *input.trim();
-	if(text.length) {
+	const title = *input.trim();
+	if(title.length) {
 		let completed = &false;
 		*data.push({
 			id: *id++,
-			completed,
-			text: &text
+			completed: &false,
+			title: &title
 		});
-		cdata.push(left.$$depend(completed)[0]);
-		left._calc();
 		*input = "";
 	}
 };
 
 const remove = id => {
-	const index = *data.findIndex(a => a.id == id);
-	*data.splice(index, 1);
-	cdata.splice(index, 1)[0].dispose();
+	*data.splice(*data.findIndex(a => a.id == id), 1);
 }
 
 const complete = (_, {checked}) => *data.forEach(({completed}) => *completed = checked);
@@ -48,16 +43,16 @@ const clear = () => {
 			<input id="toggle-all" class="toggle-all" type="checkbox" +change=complete />
 			<label for="toggle-all">Mark all as complete</label>
 			<ul class="todo-list">
-				foreach(*data as {id, completed, text}) {
+				foreach(*data as {id, completed, title}) {
 					let editing = &false;
 					<li ~class:editing=*editing ~class:completed=*completed>
 						<div class="view">
 							<input class="toggle" *checkbox=completed />
-							<label +dblclick={{*editing=true}}>${*text}</label>
+							<label +dblclick={{*editing=true}}>${*title}</label>
 							<button class="destroy" +click={{remove(id)}}/>
 						</div>
 						if(*editing) {
-							<input class="edit" +documentappend={{target.focus()}} +focusout={{*editing=false}} *text=text />
+							<input class="edit" +documentappend={{target.focus()}} +focusout={{*editing=false}} *text=title />
 						}
 					</li>
 				}

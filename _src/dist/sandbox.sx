@@ -16,8 +16,9 @@ Sactory.addWidget("message", function(message){
 class Sandbox {
 
 	constructor({readonly, embedded, name, mode, source}) {
-		this.es6 = (&this.checkES6()).localStorage("sandbox_es6");
 		this.debug = (&false).localStorage("sandbox_debug");
+		this.es6 = (&this.checkES6()).localStorage("sandbox_es6");
+		this.hideResult = (&false).localStorage("sandbox_hide_result");
 		this.runtime = document.getElementById("sactory").src;
 		this.lastId = (&0).localStorage("sandbox_id");
 		this.currentId = (&0).localStorage("sandbox_curr_id");
@@ -194,7 +195,7 @@ class Sandbox {
 	}
 	
 	render({orientation = "x", hide = [], embedded}) {
-		return <div data-orientation=orientation>
+		return <div data-orientation=orientation ~class:hide-result=this.*hideResult>
 			foreach(hide as value) {
 				<:element ~class=`hide-${value}` />
 			}
@@ -252,6 +253,9 @@ class Sandbox {
 					</label>
 					<label>
 						<input *checkbox=this.es6 /> Generate ES6 code
+					</label>
+					<label>
+						<input *checkbox=this.hideResult /> Hide compiled code
 					</label>
 					<:inherit &width="100%" @disabled=this.*readonly :whitelist="input" :whitelist="textarea">
 						<h4>Description</h4>
