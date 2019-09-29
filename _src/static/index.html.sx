@@ -31,6 +31,7 @@ module.exports = class extends Index {
 					}
 
 					.heptagon {
+						z-index: 1;
 						width, height: calc(100vmin + 128px);
 						background: url(${root}res/icon_dark.svg);
 						animation: rotate 280s linear infinite;

@@ -19,7 +19,7 @@
 		"codemirror": "^5.49.0",
 		"mkdirp": "^0.5.1",
 		"ncp": "^2.0.0",
-		"sactory": "^0.142.1"
+		"sactory": "^0.144.1"
 	},
 	"private": true
 }

@@ -15,11 +15,10 @@ Sactory.addWidget("message", function(message){
 
 class Sandbox {
 
-	constructor({readonly, embedded, name, mode, source}) {
+	constructor({readonly, embedded, name, mode, head, source}) {
 		this.debug = (&false).localStorage("sandbox_debug");
 		this.es6 = (&this.checkES6()).localStorage("sandbox_es6");
 		this.hideResult = (&false).localStorage("sandbox_hide_result");
-		this.runtime = document.getElementById("sactory").src;
 		this.lastId = (&0).localStorage("sandbox_id");
 		this.currentId = (&0).localStorage("sandbox_curr_id");
 		this.readonly = &!!readonly;
@@ -44,6 +43,7 @@ class Sandbox {
 		} else {
 			if(name) this.data.*name = name;
 			if(mode) this.data.*mode = mode;
+			if(head) this.data.*head = head;
 			if(source) this.data.*source = source;
 		}
 		this.data.editorSource = this.data.*source;
@@ -56,7 +56,7 @@ class Sandbox {
 			}
 		};
 		// source
-		this.srcdoc = & => `${this.data.*head}<script src="${this.runtime}"></script><script>Sactory.ready(function(){${this.*result.source && this.*result.source.all}})</script>`;
+		this.srcdoc = & => `${this.data.*head}<script src="${DIST}sactory.min.js"></script><script>Sactory.ready(function(){${this.*result.source && this.*result.source.all}})</script>`;
 		// settings
 		this.settings = &false;
 		this.snippets = & => {
@@ -133,7 +133,7 @@ class Sandbox {
 	}
 
 	openImpl(type, data) {
-		window.open(`${this.runtime.slice(0, -19)}${type}#${encode(data)}`);
+		window.open(`${ROOT}${type}#${encode(data)}`);
 	}
 
 	open() {

@@ -4,7 +4,8 @@ const mkdirp = require("mkdirp");
 const { ncp } = require("ncp");
 const { transformSync } = require("@babel/core");
 
-const sactory = "../../factory/";
+const sactory = "../node_modules/sactory/";
+//const sactory = "../../factory/";
 
 const { version } = require(sactory + "version");
 const { transpile } = require(sactory + "transpiler");
@@ -17,7 +18,7 @@ const sections = [
 
 const nop = () => {};
 
-const commonjs = (filename, data) => transpile({env: "commonjs", filename, mode, es6: true, runtime: sactory + "index"}, data);
+const commonjs = (filename, data) => transpile({env: "commonjs", filename, mode, es6: true, capitalIsWidget: true, runtime: sactory + "index"}, data);
 
 // prepare dist
 try {
@@ -61,7 +62,7 @@ const widgets = (folder, paths) => {
 		if(stat.isDirectory()) {
 			widgets(folder + filename + "/", paths.concat(filename));
 		} else {
-			fs.writeFileSync("./_dist/" + paths.map(p => p + "_").join("") + filename.slice(0, -2) + "js", transpile({env: "commonjs", filename, mode, es6: true, runtime: sactory + "index"}, fs.readFileSync(folder + filename, "utf8")));
+			fs.writeFileSync("./_dist/" + paths.map(p => p + "_").join("") + filename.slice(0, -2) + "js", transpile({env: "commonjs", filename, mode, es6: true, capitalIsWidget: true, runtime: sactory + "index"}, fs.readFileSync(folder + filename, "utf8")));
 		}
 	});
 };
@@ -126,7 +127,8 @@ fs.readdirSync("./_src/dist").forEach(fname => {
 });
 
 // copy files from sactory's dist folder
-const sactoryDist = "../factory/dist/";
+const sactoryDist = "./node_modules/sactory/dist/";
+//const sactoryDist = "../factory/dist/";
 fs.readdirSync(sactoryDist).forEach(filename => {
 	if(/^(sactory|transpiler)\.min\.js$/.test(filename)) {
 		write("dist/" + filename, fs.readFileSync(sactoryDist + filename, "utf8"));

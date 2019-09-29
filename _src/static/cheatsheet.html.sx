@@ -1,0 +1,99 @@
+const Index = require("./index");
+
+class Section {
+
+	render({name}) {
+		return <div class="section">
+			<h2 id=name.toLowerCase()>
+				<a href=`#${name.toLowerCase()}`>#</a>
+				${name}
+			</h2>
+		</div>
+	}
+
+	render$row({title, examples}) {
+		return <div class="row">
+			<h3 id=title.toLowerCase()>
+				<a href=`#${title.toLowerCase()}`>#</a>
+				${title}
+			</h3>
+			<table>
+				<tr>
+					<td width=1>
+						foreach(examples as example) {
+							<code>${example}</code>
+						}
+					</td>
+					<td class="description" :slot />
+				</tr>
+			</table>
+		</div>
+	}
+
+}
+
+module.exports = class extends Index {
+	
+	render() {
+		return <:super>
+			<div &width="100%" &background="white">
+				<div &width="800px" &max-width="100%" &margin="0 auto" &padding="15px">
+					<Section $name="Observables">
+						<$row $title="Declaration (by value)" $examples=["&value"]>
+							Creates an observable from the given value.
+						</$row>
+						<$row $title="Declaration (by function)" $examples=["& => value", "& => { return value }", "function(&){ return value }"]>
+							Creates an observable from the result of the given function and recompute it every time one its dependencies change.
+						</$row>
+						<$row $title="Value" $examples=["*value", "object.*value"]>
+
+						</$row>
+						<$row $title="Value (untracked)" $examples=["^value", "object.^value"]>
+
+						</$row>
+						<$row $title="Value (runtime dependency)" $examples=["**value", "object.**value"]>
+
+						</$row>
+					</Section>
+					<Section $name="Tags">
+
+					</Section>
+					<Section $name="Attributes">
+
+					</Section>
+				</div>
+			</div>
+			<style :scoped>
+				.section + .section {
+					margin-top: 30px;
+				}
+
+				.row + .row {
+					margin-top: 15px;
+				}
+
+				table {
+					width: 100%;
+					td {
+						padding: 0;
+					}
+				}
+
+				code {
+					display: block;
+					white-space: nowrap;
+					padding: 1px 3px;
+					& + code {
+						margin-top: 3px;
+					}
+				}
+
+				.description {
+					vertical-align: top;
+					padding: 4px 8px;
+				}
+			</style>
+		</:super>
+	}
+
+};
