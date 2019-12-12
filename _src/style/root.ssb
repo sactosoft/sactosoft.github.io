@@ -1,11 +1,11 @@
 :root {
 
-	foreach(fonts as font, value) {
+	foreach(fonts as font: value) {
 		--font-${font}: ${value};
 	}
 
-	foreach(colors as type, weights) {
-		foreach(weights as weight, value) {
+	foreach(colors as type: weights) {
+		foreach(weights as weight: value) {
 			--color-${type}-${weight}: ${value};
 		}
 	}
@@ -43,7 +43,7 @@ a {
 	white-space: nowrap;
 }
 
-foreach(fonts as font, value) {
+foreach(fonts as font: value) {
 
 	.font-${font} {
 		font-family: ${value};

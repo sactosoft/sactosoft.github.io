@@ -54,7 +54,7 @@ body::before, .header-background {
 	top, left: 0;
 	width: 100%;
 	height: 100vh;
-	background: linear-gradient(to bottom right, ${@lighten("#7000a0", .25)}, ${@darken("#7000a0", .25)});
+	background: linear-gradient(to bottom right, ${$.lighten("#7000a0", .25)}, ${$.darken("#7000a0", .25)});
 }
 
 .content {
@@ -75,7 +75,7 @@ body::before, .header-background {
 			color: #38A169;
 		}
 	}
-	
+
 }
 
 hr {
@@ -91,7 +91,7 @@ hr {
 	border-left: 6px solid transparent;
 	border-radius: 1px;
 
-	foreach(colors as type, color) {
+	foreach(colors as type: color) {
 
 		&.${type} {
 			border-color: ${color};

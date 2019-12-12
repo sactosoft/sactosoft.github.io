@@ -1,16 +1,16 @@
 {
-	"name": "sactory.github.io",
+	"name": "sactosoft.github.io",
 	"main": "index.js",
 	"scripts": {
 		"build": "node ./_script/build.js"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/sactory/sactory.github.io.git"
+		"url": "git+https://github.com/sactosoft/sactosoft.github.io.git"
 	},
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/sactory/sactory.github.io/issues"
+		"url": "https://github.com/sactosoft/sactosoft.github.io/issues"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.6.2",
@@ -19,7 +19,7 @@
 		"codemirror": "^5.49.0",
 		"mkdirp": "^0.5.1",
 		"ncp": "^2.0.0",
-		"sactory": "^0.144.1"
+		"sactory": "^0.146.0"
 	},
 	"private": true
 }

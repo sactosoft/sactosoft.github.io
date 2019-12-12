@@ -9,7 +9,7 @@ module.exports = class {
 				<script>
 					window.onload = function(){
 						var data = decode(window.location.hash.substr(1));
-						document.title = (data.name || "???") + " — Sactory v" + #{version};
+						document.title = (data.name || "???") + " — Sactory v" + %{version};
 						var iframe = document.createElement("iframe");
 						iframe.style.position = "fixed";
 						iframe.style.top = iframe.style.left = 0;

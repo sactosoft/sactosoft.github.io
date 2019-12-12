@@ -126,15 +126,15 @@
 		margin-left: .6em;
 	}
 
-	foreach(colors as type, color) {
+	foreach(colors as type: color) {
 
 		&.${type} {
 
-			color: ${@contrast(@darken(color, .5))};
+			color: ${$.contrast($.darken(color, .5))};
 
-			const c300 = @lighten(color, .25);
+			const c300 = $.lighten(color, .25);
 			const c500 = color;
-			const c700 = @darken(color, .25);
+			const c700 = $.darken(color, .25);
 						
 			&:not(.flat) {
 			
@@ -159,7 +159,7 @@
 					background: ${c500};
 				
 					&:hover {
-						background: ${@mix(c500, c700)};
+						background: ${$.mix(c500, c700)};
 					}
 					
 					&:active {

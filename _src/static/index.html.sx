@@ -34,10 +34,12 @@ module.exports = class extends Index {
 						z-index: 1;
 						width, height: calc(100vmin + 128px);
 						background: url(${root}res/icon_dark.svg);
+						background-size: 100%;
 						animation: rotate 280s linear infinite;
 						& > * {
 							width, height: 80%;
 							background: url(${root}res/icon_light.svg);
+							background-size: 100%;
 							animation: rotate 140s linear infinite;
 							animation-direction: reverse;
 						}

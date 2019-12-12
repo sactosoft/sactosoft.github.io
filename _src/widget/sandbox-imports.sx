@@ -10,6 +10,6 @@ module.exports = function({root, dist = "./"}){
 		<script src=`${root}dist/sactory.min.js`></script>
 		<script src=`${root}dist/hash.js`></script>
 		<script src=`${dist}transpiler.min.js`></script>
-		<script>var ROOT=#{root};var DIST=#{dist};</script>
+		<script>var ROOT=%{root};var DIST=%{dist};</script>
 	</#document-fragment>
 };
